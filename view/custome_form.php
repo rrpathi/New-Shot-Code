@@ -29,7 +29,7 @@
     <input type="text" class="form-control" id="shot_code_name" placeholder="Enter text" name="shot_code_name">
   </div>
   <div class="wp_single_set_short_code">
-    <div class="form-group col-md-6">
+    <!-- <div class="form-group col-md-6">
       <label for="text">Label Name</label>
       <input type="text" class="form-control label_name" id="text" placeholder="Enter text" name="label[]">
     </div>
@@ -42,12 +42,11 @@
       <option class="wp_checkbox">Check Box</option>
       <option class="wp_radio">Radio Button</option>
       </select>
-    </div>
+    </div> -->
   </div>
-  <div class="wp_append_checkbox"></div>
-  <div class="wp_append_radio"></div>
+  
   <input type="button" id="wp_add_more" class="btn btn-default" value="Add More">
-  <button type="submit" id="submit" class="btn btn-default">Submit</button> 
+  <button type="submit" id="short_code_submit" class="btn btn-default">Submit</button> 
 </div>
 
 
