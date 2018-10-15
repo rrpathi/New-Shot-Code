@@ -42,6 +42,7 @@ class DropboxUpload{
 		add_action('wp_ajax_delete_short_code',array($this,'delete_short_code'));
 		add_action('wp_ajax_update_short_code_details',array($this,'update_short_code_details'));
 		add_filter('shot-code',array($this,'shot_code_callback'),10,1);
+		add_action('init',array($this,'store_form_data'));
 	}
 
 	public function edit_short_code(){
@@ -137,38 +138,19 @@ class DropboxUpload{
 		 global $wpdb;
 		 $table_name = $this->db_prefix().'custome_form';
 		 $shot_code = json_decode(stripslashes($_POST['shot_code']));
+		 $form_array = serialize($shot_code);
 		 $shortcode_name = $shot_code->shortcode_name;
-		 $new_label_data['label_name'] = $shot_code->label_name;
-		 $new_field_data['field_name'] = $shot_code->field_name;
-		 foreach ($new_label_data as $key => $value) {
-		 	foreach ($value as $key => $label_value) {
-		 		$newlabel_value[] = $label_value; 
-		 	}
-		 }
-		  foreach ($new_field_data as $key => $value) {
-		 	foreach ($value as $key => $field_value) {
-		 		$newfield_value[] = $field_value; 
-		 	}
-		 }
-		 
-		$form_array = serialize(array_combine(array_filter($newlabel_value),array_filter($newfield_value)));
-		if(!empty($form_array) && !empty($shortcode_name)){
-			$column_values = array('form_id'=>$shortcode_name,'string'=>$form_array);
-			$shotcode = $wpdb->insert($table_name,$column_values);
-			if($shotcode){
-				echo json_encode(array('status'=>'1'));
-				wp_die();
-			}else{
-				echo json_encode(array('status'=>'0'));
-				wp_die();
-			}
+		$column_values = array('form_id'=>$shortcode_name,'string'=>$form_array);
+		$shotcode = $wpdb->insert($table_name,$column_values);
+		if($shotcode){
+			echo json_encode(array('status'=>'1'));
+			wp_die();
 		}else{
 			echo json_encode(array('status'=>'0'));
 			wp_die();
 		}
 		 
 	}
-
 
 	public function recursiveScan($dir,$option){
 		global $wpdb;
@@ -220,27 +202,59 @@ class DropboxUpload{
 	}
 
 	public function shot_code_callback($value){
-		foreach ($value as $key => $value) {
-			$shortcode[$value['form_id']] = unserialize($value['string']);
+		foreach ($value as $key => $stored_data) {
+			$shortcode[$stored_data['form_id']] = json_decode(json_encode(unserialize($stored_data['string'])),true);
 		}
 		return $shortcode;
 	}
 	public function apply_filter(){
-		global $wpdb;
-		$table_name  = $this->db_prefix()."custome_form";
-		$value =  $wpdb->get_results("SELECT * FROM $table_name ",ARRAY_A);
+	global $wpdb;
+	$table_name  = $this->db_prefix()."custome_form";
+	$value =  $wpdb->get_results("SELECT * FROM $table_name ",ARRAY_A);
 		if(!empty($value)){
 			$apply_filter = apply_filters('shot-code',$value);
 			foreach ($apply_filter as  $shortcode_name => $shortcode_value) {
+				unset($shortcode_value['shortcode_name']);
 				add_shortcode($shortcode_name,function() use ($shortcode_value){
-					foreach($shortcode_value as $key =>$value){
-						echo "$key:<input type='".$value."' value=''><br>";
+					foreach ($shortcode_value as $key => $new_value) {
+						foreach ($new_value as $key => $value) {
+							if($value['field_type'] =="radio"){
+								$result.=$value['label_name']."<br />";
+							foreach ($value['radio_button'] as $key => $radio_value) {
+									$result .= "$radio_value:<input type='".$value['field_type']."' value='".$radio_value."' name='".$value['label_name']."'><br>";
+								}
+
+							}
+							if(($value['field_type'] !="radio")&&($value['field_type'] !='checkbox')){
+								$label_name = $value['label_name'];
+								$type = $value['field_type'];
+								$result .= "$label_name:<input type='".$type."' name='".$label_name."'><br>";
+							}
+							if($value['field_type']=='checkbox'){
+								$result.=$value['label_name']."<br />";
+								foreach ($value['checkbox'] as $key => $checkbox_name) {
+									$result .= "$checkbox_name<input type='".$value['field_type']."' value='".$checkbox_name."' name='".$checkbox_name."'><br>";
+								}
+							}
+						}
+
+						echo "<form action='#' method='POST' id='form_data'>
+						$result.<input type='submit' id='store_form_value' name='register'>
+						</form>";
 					}
 				});
 			}
 		}
 	}
-
+	public function store_form_data(){
+		if(isset($_POST['register'])){
+			global $wpdb;
+			$table_name  = $this->db_prefix()."shortcode_values";
+			$column_values = array('shortcode_form_data'=>serialize($_POST));
+			$wpdb->insert($table_name,$column_values);
+			
+		}
+	}
 
 	public function hooks(){
 		register_activation_hook(__FILE__,array($this,'activation_table'));
