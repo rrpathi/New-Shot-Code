@@ -139,7 +139,8 @@ class DropboxUpload{
 		 $table_name = $this->db_prefix().'custome_form';
 		 $shot_code = json_decode(stripslashes($_POST['shot_code']));
 		 $form_array = serialize($shot_code);
-		 $shortcode_name = $shot_code->shortcode_name;
+		 // $shortcode_name = $shot_code->shortcode_name;
+		 $shortcode_name = str_replace(" ", "-",$shot_code->shortcode_name);
 		$column_values = array('form_id'=>$shortcode_name,'string'=>$form_array);
 		$shotcode = $wpdb->insert($table_name,$column_values);
 		if($shotcode){
@@ -227,19 +228,19 @@ class DropboxUpload{
 							if($value['field_type'] =="radio"){
 								$result.=$value['label_name']."<br />";
 							foreach ($value['radio_button'] as $key => $radio_value) {
-									$result .= "$radio_value:<input type='".$value['field_type']."' value='".$radio_value."' name='".$value['label_name']."'><br>";
+									$result .= "$radio_value:<input type='".$value['field_type']."' value='".$radio_value."' name='".str_replace(' ','',$value['label_name'])."'><br>";
 								}
 
 							}
 							if(($value['field_type'] !="radio")&&($value['field_type'] !='checkbox')){
 								$label_name = $value['label_name'];
 								$type = $value['field_type'];
-								$result .= "$label_name:<input type='".$type."' name='".$label_name."'><br>";
+								$result .= "$label_name:<input type='".$type."' name='".str_replace(' ','',$label_name)."'><br>";
 							}
 							if($value['field_type']=='checkbox'){
 								$result.=$value['label_name']."<br />";
 								foreach ($value['checkbox'] as $key => $checkbox_name) {
-									$result .= "$checkbox_name<input type='".$value['field_type']."' value='".$checkbox_name."' name='".$value['label_name']."[]'><br>";
+									$result .= "$checkbox_name<input type='".$value['field_type']."' value='".$checkbox_name."' name='".str_replace(' ','',$value['label_name'])."[]'><br>";
 								}
 							}
 						}
