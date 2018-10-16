@@ -1,5 +1,6 @@
 jQuery(document).ready(function(){
 		var i=0;
+		jQuery("#short_code_submit").hide();
 		jQuery("body").on("change",".wp_shot_add_shot_code_option",function(){
 		var iValue = jQuery(this).attr('id');
 		var shot_code_option_class_name = jQuery(this).find('option:selected').attr('class');
@@ -13,6 +14,7 @@ jQuery(document).ready(function(){
 		jQuery(".wp_append_radio"+iValue).append(wp_radio_button_option);
 		}
 		});
+
 
 		// End Onchange option value
 
@@ -43,6 +45,7 @@ jQuery(document).ready(function(){
 
 
 	jQuery("#wp_add_more").click(function(){
+		jQuery("#short_code_submit").show();
 		var append_add_more = '<div class="row wp_main_short_code"><div class="form-group col-md-5"><label for="text">Label Name</label><input type="text" class="form-control label_name "  name="wp_ragu_demo['+i+'][]"  id="text" placeholder="Enter text" ></div><div class="form-group  col-md-5"><label for="exampleSelect1">Field Type</label><select class="form-control wp_shot_add_shot_code_option field_type"  name="wp_ragu_demo['+i+'][]" style="height:34px;" id="'+i+'"><option value="text" class="wp_text">Text</option><option class="wp_email" value="email">Email</option><option class="wp_password" value="password">Password</option><option class="wp_checkbox" value="checkbox">Check Box</option><option class="wp_radio" value="radio">Radio Button</option></select></div><div class="col-md-2"><button type="button" class="wp_main_short_code_remove">Delete</button></div><div class="wp_append_checkbox'+i+'"></div><div class="wp_append_radio'+i+'"></div>';
 		jQuery(".wp_single_set_short_code").append(append_add_more);
 		i++
