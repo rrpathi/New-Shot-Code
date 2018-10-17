@@ -1,8 +1,9 @@
 <?php 
 global $wpdb;
 $table_name = $wpdb->prefix.'dropbox_details';
-$data = $wpdb->get_results("SELECT * FROM $table_name",ARRAY_A);
-if(!empty($data)){ ?>
+$data = $wpdb->get_results("SELECT * FROM $table_name", ARRAY_A);
+if (!empty($data)) {
+    ?>
   <html>
 <head>
   <title></title>
@@ -43,7 +44,9 @@ if(!empty($data)){ ?>
   <!-- </form> -->
 </body>
 </html>
-<?php }else{ ?>
+<?php
+} else {
+        ?>
     <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,4 +80,5 @@ if(!empty($data)){ ?>
 </div>
 </body>
 </html>
-<?php } ?>
+<?php
+    } ?>
