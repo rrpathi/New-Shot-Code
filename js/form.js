@@ -5,12 +5,12 @@ jQuery(document).ready(function(){
 		var iValue = jQuery(this).attr('id');
 		var shot_code_option_class_name = jQuery(this).find('option:selected').attr('class');
 		if(shot_code_option_class_name =='wp_checkbox'){
-		var wp_checkbox_option = '<div class="row"><div class="form-group col-md-10"><label for="text">Checkbox Field Name</label><input type="text" class="form-control checkbox_field_name " id="text" placeholder="Enter text"></div><div class="col-md-2"><button class="Add_more_checkbox" id="'+iValue+'" type="button">Add</button></div></div><div class="wp_checkbox_Addmore'+iValue+'"></div>';
+		var wp_checkbox_option = '<div class="row"><div class="form-group col-md-10"><label for="text">Checkbox Field Name</label><input type="text" class="form-control checkbox_field_name " id="text" placeholder="Enter text"></div><div class="col-md-2"><button class="Add_more_checkbox btn btn-primary" id="'+iValue+'" type="button">Add</button></div></div><div class="wp_checkbox_Addmore'+iValue+'"></div>';
 		jQuery(".wp_append_checkbox"+iValue).append(wp_checkbox_option);
 		}
 
 		if(shot_code_option_class_name =='wp_radio'){
-		var wp_radio_button_option = '<div class="row"><div class="form-group col-md-10"><label for="text">Radio Button Field Name</label><input type="text" class="form-control label_name radio_button_child" id="text" placeholder="Enter text" name="label[]"></div><div class="col-md-2"><button class="add_more_radio_button" id="'+iValue+'" type="button">Add</button></div></div><div class="wp_radio_button_Addmore'+iValue+'"></div>';
+		var wp_radio_button_option = '<div class="row"><div class="form-group col-md-10"><label for="text">Radio Button Field Name</label><input type="text" class="form-control label_name radio_button_child" id="text" placeholder="Enter text" name="label[]"></div><div class="col-md-2"><button class="add_more_radio_button btn btn-primary" id="'+iValue+'" type="button">Add</button></div></div><div class="wp_radio_button_Addmore'+iValue+'"></div>';
 		jQuery(".wp_append_radio"+iValue).append(wp_radio_button_option);
 		}
 		});
@@ -20,7 +20,7 @@ jQuery(document).ready(function(){
 
 		jQuery("body").on("click",".add_more_radio_button",function(){
 			var iValue = jQuery(this).attr('id');
-			var wp_radio_button_add_more = '<div class="row single_set_radio_button_remove"><div class="form-group col-md-10"><label for="text">Radio Button Field Name</label><input type="text" class="form-control label_name radio_button_child" id="text" placeholder="Enter text" name="label[]"></div><div class="col-md-2"><button class="remove_radio_button">Delete</button></div></div>';
+			var wp_radio_button_add_more = '<div class="row single_set_radio_button_remove"><div class="form-group col-md-10"><label for="text">Radio Button Field Name</label><input type="text" class="form-control label_name radio_button_child" id="text" placeholder="Enter text" name="label[]"></div><div class="col-md-2"><button class="remove_radio_button btn btn-danger">Delete</button></div></div>';
 			jQuery(".wp_radio_button_Addmore"+iValue).append(wp_radio_button_add_more);
 			// console.log(add_more_radio_button_id);
 
@@ -29,7 +29,7 @@ jQuery(document).ready(function(){
 		jQuery("body").on("click",".Add_more_checkbox",function(){
 			var Ivalue = jQuery(this).attr('id');
 			console.log(Ivalue);
-			var wp_checkbox_options = '<div class="row single_set_checkbox_remove add_more_checkbox"><div class="form-group col-md-10"><label for="text">Checkbox Field Name</label><input type="text" class="form-control checkbox_field_name" id="text" placeholder="Enter text" name="checkbox_field_name[]"></div><div class="col-md-2"><button class="remove_check_box">Delete</button></div></div>';
+			var wp_checkbox_options = '<div class="row single_set_checkbox_remove add_more_checkbox"><div class="form-group col-md-10"><label for="text">Checkbox Field Name</label><input type="text" class="form-control checkbox_field_name" id="text" placeholder="Enter text" name="checkbox_field_name[]"></div><div class="col-md-2"><button class="remove_check_box btn btn-danger">Delete</button></div></div>';
 			jQuery(".wp_checkbox_Addmore"+Ivalue).append(wp_checkbox_options);
 		})
 
@@ -46,7 +46,7 @@ jQuery(document).ready(function(){
 
 	jQuery("#wp_add_more").click(function(){
 		jQuery("#short_code_submit").show();
-		var append_add_more = '<div class="row wp_main_short_code"><div class="form-group col-md-5"><label for="text">Label Name</label><input type="text" class="form-control label_name "  name="wp_ragu_demo['+i+'][]"  id="text" placeholder="Enter text" ></div><div class="form-group  col-md-5"><label for="exampleSelect1">Field Type</label><select class="form-control wp_shot_add_shot_code_option field_type"  name="wp_ragu_demo['+i+'][]" style="height:34px;" id="'+i+'"><option value="text" class="wp_text">Text</option><option class="wp_email" value="email">Email</option><option class="wp_password" value="password">Password</option><option class="wp_checkbox" value="checkbox">Check Box</option><option class="wp_radio" value="radio">Radio Button</option></select></div><div class="col-md-2"><button type="button" class="wp_main_short_code_remove">Delete</button></div><div class="wp_append_checkbox'+i+'"></div><div class="wp_append_radio'+i+'"></div>';
+		var append_add_more = '<div class="row wp_main_short_code"><div class="form-group col-md-5"><label for="text">Label Name</label><input type="text" class="form-control label_name "   id="text" placeholder="Enter text" ></div><div class="form-group  col-md-5"><label for="exampleSelect1">Field Type</label><select class="form-control wp_shot_add_shot_code_option field_type"  name="wp_ragu_demo['+i+'][]" style="height:34px;" id="'+i+'"><option value="text" class="wp_text">Text</option><option class="wp_email" value="email">Email</option><option class="wp_password" value="password">Password</option><option class="wp_checkbox" value="checkbox">Check Box</option><option class="wp_radio" value="radio">Radio Button</option><option class="" value="file">File Upload</option></select></div><div class="col-md-2"><button type="button" class="wp_main_short_code_remove btn btn-danger">Delete</button></div><div class="wp_append_checkbox'+i+'"></div><div class="wp_append_radio'+i+'"></div>';
 		jQuery(".wp_single_set_short_code").append(append_add_more);
 		i++
 	});

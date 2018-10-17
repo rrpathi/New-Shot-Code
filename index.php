@@ -197,6 +197,8 @@ class DropboxUpload{
 		wp_enqueue_script('jquery');
 		wp_enqueue_script('custome.js',PLUGIN_DIR_URL.'js/custome.js');
 		wp_enqueue_script('form-js',PLUGIN_DIR_URL.'js/form.js');
+		wp_enqueue_script('validation-js',PLUGIN_DIR_URL.'js/jquery.validate.js');
+		wp_enqueue_style( 'custome_style.css',PLUGIN_DIR_URL.'css/custome_style.css');
 	}
 	public function db_prefix(){
 		global $wpdb;
