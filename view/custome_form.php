@@ -26,7 +26,7 @@
 <div class="container">
   <div class="form-group col-md-12">
     <label for="text">Shot Code Name</label>
-    <input type="text" class="form-control" id="shot_code_name" placeholder="Enter text" required="" name="shot_code_name">
+    <input type="text" class="form-control" id="shot_code_name" placeholder="Enter text" name="shot_code_name">
   </div>
   <div class="wp_single_set_short_code">
     <!-- <div class="form-group col-md-6">

@@ -247,7 +247,7 @@ class DropboxUpload{
 							}
 						}
 					}
-					echo "<form action='#' method='POST' id='form_data'>
+					echo "<form action='#' method='POST' id='form_data' enctype='multipart/form-data'>
 						$result.<input type='submit' id='store_form_value' name='register'>
 						</form>";
 				});
@@ -256,9 +256,18 @@ class DropboxUpload{
 	}
 	public function store_form_data(){
 		if(isset($_POST['register'])){
-			// echo "<pre>";
-			// print_r($_POST);
-			// exit();
+			if(!empty($_FILES)){
+				foreach($_FILES as $key=>$value){
+					if(!empty($value['tmp_name'])){
+						$tmp_name = $value['tmp_name'];
+						$name = $value['name'];
+						$dir   = PLUGIN_DIR_PATH."uploads/$name";
+						if(move_uploaded_file($tmp_name,$dir)){
+							$_POST["$key"] = $dir;
+						}
+					}
+				}
+			}
 			global $wpdb;
 			unset($_POST['register']);
 			$table_name  = $this->db_prefix()."shortcode_values";
