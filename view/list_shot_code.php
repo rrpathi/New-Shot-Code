@@ -1,5 +1,4 @@
 <?php
-include_once 'header.php';
 global $wpdb;
 $table_name = $wpdb->prefix . 'custome_form';
 $shot_code_list = $wpdb->get_results("SELECT * FROM $table_name", ARRAY_A);

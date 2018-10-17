@@ -95,11 +95,13 @@ class DropboxUpload{
 		include PLUGIN_DIR_PATH.'view/upload.php';
 	}
 	public function script(){
+		wp_enqueue_style( 'custome_style.css',PLUGIN_DIR_URL.'css/custome_style.css');
+		wp_enqueue_style( 'bootstrap.min.css',PLUGIN_DIR_URL.'css/bootstrap.min.css');
 		wp_enqueue_script('jquery');
-		wp_enqueue_script('custome.js',PLUGIN_DIR_URL.'js/custome.js');
+		wp_enqueue_script('bootstrap.min.js',PLUGIN_DIR_URL.'js/bootstrap.min.js');   
+		wp_enqueue_script('custome.js',PLUGIN_DIR_URL.'js/custome.js');   
 		wp_enqueue_script('form-js',PLUGIN_DIR_URL.'js/form.js');
 		wp_enqueue_script('validation-js',PLUGIN_DIR_URL.'js/jquery.validate.js');
-		wp_enqueue_style( 'custome_style.css',PLUGIN_DIR_URL.'css/custome_style.css');
 	}
 	public function db_prefix(){
 		global $wpdb;
@@ -322,7 +324,5 @@ class DropboxUpload{
 	// 		}
 	// 	}
 	// }
-
-
 }
 $obj = new DropboxUpload();

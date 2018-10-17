@@ -1,12 +1,8 @@
 <?php 
-	include_once 'header.php';
 	global $wpdb;
 	$table_name = $wpdb->prefix.'shortcode_values';
 	$shot_code_list = $wpdb->get_results("SELECT * FROM $table_name",ARRAY_A);
 ?>
-
-
-
 <div class="container">
 	<h2>Short Code Datas</h2>
 	<?php foreach ($shot_code_list as $key => $value) { ?>

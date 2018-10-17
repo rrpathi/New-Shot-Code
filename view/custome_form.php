@@ -1,4 +1,3 @@
-<?php include_once 'header.php'; ?>
 <!-- <body>
 <div class="container">
   <center><h2>Create New Short Code</h2></center>
