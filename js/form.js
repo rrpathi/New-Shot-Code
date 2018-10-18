@@ -4,6 +4,8 @@ jQuery(document).ready(function(){
 		jQuery("body").on("change",".wp_shot_add_shot_code_option",function(){
 		var iValue = jQuery(this).attr('id');
 		var shot_code_option_class_name = jQuery(this).find('option:selected').attr('class');
+			jQuery('.wp_append_checkbox'+iValue).empty();
+			jQuery('.wp_append_radio'+iValue).empty();
 		if(shot_code_option_class_name =='wp_checkbox'){
 		var wp_checkbox_option = '<div class="row"><div class="form-group col-md-10"><label for="text">Checkbox Field Name</label><input type="text" class="form-control checkbox_field_name " id="text" placeholder="Enter text"></div><div class="col-md-2"><button class="Add_more_checkbox btn btn-primary" id="'+iValue+'" type="button">Add</button></div></div><div class="wp_checkbox_Addmore'+iValue+'"></div>';
 		jQuery(".wp_append_checkbox"+iValue).append(wp_checkbox_option);
