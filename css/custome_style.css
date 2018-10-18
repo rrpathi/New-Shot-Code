@@ -7,14 +7,34 @@
 .remove_check_box{
 	margin-top: 20px;
 }
-.ragupathi{
-	     color: #666; 
+
+.remove_radio_button{
+     margin-top: 20px;
+}
+
+.add_more_radio_button{
+     margin-top: 20px;
+}
+.short_code_form_design{
+     color: #666; 
      background: #fff; 
      background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)); 
      border: 1px solid #bbb; 
      -webkit-border-radius: 3px; 
      border-radius: 3px; 
      display: block; 
-     /*padding: 0.7em; */
+     padding: 0.7em; 
      width: 100%; 
 }
+
+.short_code_checkbox_inline{
+     position: relative;
+     display: inline-block;
+     padding-left: 20px;
+     margin-bottom: 0;
+     font-weight: 400;
+     vertical-align: middle;
+     cursor: pointer;
+}
+
+

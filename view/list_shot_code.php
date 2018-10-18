@@ -19,7 +19,9 @@ if (!empty($shot_code_list)) { ?>
     foreach ($shot_code_list as $key => $value) { ?>
             <tr>
             <td><?php echo $value['form_id'] ?></td>
-            <td><a class="btn btn-danger delete_short_code" value="<?php echo $value['id'] ?>" href="#">Delete</a></td>
+            <td>
+              <a class="btn btn-primary edit_short_code" value="<?php echo $value['id'] ?>" href="#">Edit</a>
+              <a class="btn btn-danger delete_short_code" value="<?php echo $value['id'] ?>" href="#">Delete</a></td>
             </tr>
           <?php
     }

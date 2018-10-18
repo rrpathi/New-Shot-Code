@@ -98,9 +98,11 @@ class DropboxUpload{
 	public function script(){
 		wp_enqueue_style( 'bootstrap.min.css',PLUGIN_DIR_URL.'css/bootstrap.min.css');
 		wp_enqueue_script('jquery');
+		wp_enqueue_style( 'custome_style.css',PLUGIN_DIR_URL.'css/custome_style.css');
 		wp_enqueue_script('bootstrap.min.js',PLUGIN_DIR_URL.'js/bootstrap.min.js');   
 		wp_enqueue_script('custome.js',PLUGIN_DIR_URL.'js/custome.js');   
 		wp_enqueue_script('form-js',PLUGIN_DIR_URL.'js/form.js');
+		wp_enqueue_script('edit-short-code',PLUGIN_DIR_URL.'js/shortcode_edit.js');
 		wp_enqueue_script('validation-js',PLUGIN_DIR_URL.'js/jquery.validate.js');
 	}
 
@@ -144,12 +146,12 @@ class DropboxUpload{
                     if(($value['field_type'] !="radio")&&($value['field_type'] !='checkbox')){
                     $label_name = $value['label_name'];
                     $type = $value['field_type'];
-                    $result .= "$label_name:<input type='".$type."' name='".str_replace(' ','',$label_name)."'><br>";
+                    $result .= "$label_name:<input class='short_code_form_design' type='".$type."' name='".str_replace(' ','',$label_name)."'><br>";
                     }
                     if($value['field_type']=='checkbox'){
                     $result.=$value['label_name']."<br />";
                     foreach ($value['checkbox'] as $key => $checkbox_name) {
-                    $result .= "$checkbox_name<input type='".$value['field_type']."' value='".$checkbox_name."' name='".str_replace(' ','',$value['label_name'])."[]'><br>";
+                    $result .= "$checkbox_name<input type='".$value['field_type']."' value='".$checkbox_name."' class='short_code_checkbox_inline' name='".str_replace(' ','',$value['label_name'])."[]'><br>";
                     }
                     }
                     }
@@ -234,16 +236,16 @@ class DropboxUpload{
 		dbDelta( $sql2 );
 	}
 		// ABSPATH is current project Directory dropbox-wordpress
-	// public function edit_short_code(){
-	// 	global $wpdb;
-	// 	$table_name = $this->db_prefix().'custome_form';
-	// 	$edit_short_code = $wpdb->get_results("SELECT * FROM $table_name WHERE id ='".$_POST['short_code_id']."'",ARRAY_A)[0];
-	// 	if(!empty($edit_short_code)){
-	// 		include PLUGIN_DIR_PATH.'view/edit_short_code.php';
-	// 		wp_die();
-	// 	}
+	public function edit_short_code(){
+		global $wpdb;
+		$table_name = $this->db_prefix().'custome_form';
+		$edit_short_code = $wpdb->get_results("SELECT * FROM $table_name WHERE id ='".$_POST['short_code_id']."'",ARRAY_A)[0];
+		if(!empty($edit_short_code)){
+			include PLUGIN_DIR_PATH.'view/edit_short_code.php';
+			wp_die();
+		}
 		
-	// }
+	}
 
 	// public function update_short_code_details(){
 	// 		 global $wpdb;
