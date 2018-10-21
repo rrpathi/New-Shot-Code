@@ -30,7 +30,7 @@ jQuery(document).ready(function(){
 
 		jQuery("body").on("click",".Add_more_checkbox",function(){
 			var Ivalue = jQuery(this).attr('id');
-			console.log(Ivalue);
+			// console.log(Ivalue);
 			var wp_checkbox_options = '<div class="row single_set_checkbox_remove add_more_checkbox"><div class="form-group col-md-10"><label for="text">Checkbox Field Name</label><input type="text" class="form-control checkbox_field_name" id="text" placeholder="Enter text" name="checkbox_field_name[]"></div><div class="col-md-2"><button class="remove_check_box btn btn-danger">Delete</button></div></div>';
 			jQuery(".wp_checkbox_Addmore"+Ivalue).append(wp_checkbox_options);
 		})
@@ -102,7 +102,7 @@ jQuery(document).ready(function(){
 				shot_code:stringData,
 			},
 			success: function(data) {
-				console.log(data);
+				// console.log(data);
 			location. reload(true);
 
 			},

@@ -247,6 +247,29 @@ class DropboxUpload{
 		
 	}
 
+		public function update_short_code_details(){
+		global $wpdb;
+		// echo $short_code_id;
+		$table_name = $this->db_prefix().'custome_form';
+		$shot_code = json_decode(stripslashes($_POST['shot_code']));
+		$form_array = serialize($shot_code);
+		echo "<pre>";
+		print_r($form_array);
+		echo $short_code_id = $_POST['short_code_id'];
+		$shortcode_name = $shot_code->shortcode_name;
+		$shortcode_name = str_replace(" ", "-",$shot_code->shortcode_name);
+		$column_values = array('form_id'=>$shortcode_name,'string'=>$form_array);
+		$where = array('id'=>$short_code_id);
+		$shotcode = $wpdb->update($table_name,$column_values,$where);
+		if($shotcode){
+			echo json_encode(array('status'=>'1'));
+			wp_die();
+		}else{
+			echo json_encode(array('status'=>'0'));
+			wp_die();
+		}
+	}
+
 	// public function update_short_code_details(){
 	// 		 global $wpdb;
 	// 	 $shot_code = json_decode(stripslashes($_POST['update_short_code_details']));
