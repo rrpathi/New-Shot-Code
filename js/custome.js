@@ -38,5 +38,23 @@ jQuery(document).ready(function(){
 		});
 
 	});
+
+	jQuery(".delete_short_code_value").click(function(e){
+		e.preventDefault();
+		var shortcode_value_id = jQuery(this).attr('id');
+		jQuery.ajax({
+			type:"post",
+			url:ajaxurl,
+			data:{
+				action:"delete_short_code_value",
+				shortcode_value_id:shortcode_value_id,
+			},
+			success:function(data){
+				location. reload(true);
+			}
+		});
+
+	});
+
 	
 });

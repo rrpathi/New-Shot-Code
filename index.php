@@ -43,6 +43,7 @@ class DropboxUpload{
 		add_action('wp_ajax_delete_short_code',array($this,'delete_short_code'));
 		add_action('wp_ajax_update_short_code_details',array($this,'update_short_code_details'));
 		add_filter('shot-code',array($this,'shot_code_callback'),10,1);
+		add_action('wp_ajax_delete_short_code_value',array($this,'delete_short_code_value'));
 		add_action('init',array($this,'store_form_data'));
 	}
 	public function delete_short_code(){
@@ -140,20 +141,25 @@ class DropboxUpload{
                     if($value['field_type'] =="radio"){
                     $result.=$value['label_name']."<br />";
                     foreach ($value['radio_button'] as $key => $radio_value) {
-                    $result .= "$radio_value:<input type='".$value['field_type']."' value='".$radio_value."' name='".str_replace(' ','',$value['label_name'])."'><br>";
+                    // $result .= "$radio_value:<input type='".$value['field_type']."' value='".$radio_value."' name='".str_replace(' ','',$value['label_name'])."'><br>";
+                   $result .= "<label class='short_code_checkbox_inline'><input type='".$value['field_type']."' value='".$radio_value."' name='".str_replace(' ','',$value['label_name'])."' >$radio_value</label>";
                     }
+                   $result .="<br />"; 
                     }
                     if(($value['field_type'] !="radio")&&($value['field_type'] !='checkbox')){
                     $label_name = $value['label_name'];
                     $type = $value['field_type'];
-                    $result .= "$label_name:<input class='short_code_form_design' type='".$type."' name='".str_replace(' ','',$label_name)."'><br>";
+                    $result .= "$label_name:<input class='short_code_form_design' type='".$type."' name='".str_replace(' ','',$label_name)."'>";
+                    // $result .= <label class="checkbox-inline"><input type="checkbox" value="">Option 1</label>
                     }
                     if($value['field_type']=='checkbox'){
                     $result.=$value['label_name']."<br />";
                     foreach ($value['checkbox'] as $key => $checkbox_name) {
-                    $result .= "$checkbox_name<input type='".$value['field_type']."' value='".$checkbox_name."' class='short_code_checkbox_inline' name='".str_replace(' ','',$value['label_name'])."[]'><br>";
+                    // $result .= "$checkbox_name<input type='".$value['field_type']."' value='".$checkbox_name."' class='short_code_checkbox_inline' name='".str_replace(' ','',$value['label_name'])."[]'><br>";
+                    $result .= "<label class='short_code_checkbox_inline'><input type='".$value['field_type']."' value='".$checkbox_name."' name='".str_replace(' ','',$value['label_name'])."[]' >$checkbox_name</label>";
+                    	}
                     }
-                    }
+                    $result .="<br />"; 
                     }
                 }
                 echo "<form action='#' method='POST' id='form_data' enctype='multipart/form-data'>
@@ -247,21 +253,32 @@ class DropboxUpload{
 		
 	}
 
-		public function update_short_code_details(){
+	public function update_short_code_details(){
 		global $wpdb;
 		// echo $short_code_id;
 		$table_name = $this->db_prefix().'custome_form';
 		$shot_code = json_decode(stripslashes($_POST['shot_code']));
 		$form_array = serialize($shot_code);
-		echo "<pre>";
-		print_r($form_array);
-		echo $short_code_id = $_POST['short_code_id'];
+		$short_code_id = $_POST['short_code_id'];
 		$shortcode_name = $shot_code->shortcode_name;
 		$shortcode_name = str_replace(" ", "-",$shot_code->shortcode_name);
 		$column_values = array('form_id'=>$shortcode_name,'string'=>$form_array);
 		$where = array('id'=>$short_code_id);
 		$shotcode = $wpdb->update($table_name,$column_values,$where);
 		if($shotcode){
+			echo json_encode(array('status'=>'1'));
+			wp_die();
+		}else{
+			echo json_encode(array('status'=>'0'));
+			wp_die();
+		}
+	}
+
+	public function delete_short_code_value(){
+		global $wpdb;
+		$table_name = $this->db_prefix().'shortcode_values';
+		$delete = $wpdb->delete($table_name, array( 'id' =>$_POST['shortcode_value_id']));
+		if($delete){
 			echo json_encode(array('status'=>'1'));
 			wp_die();
 		}else{

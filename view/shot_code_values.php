@@ -5,12 +5,13 @@
 ?>
 <div class="container">
 	<h2>Short Code Datas</h2>
-	<?php foreach ($shot_code_list as $key => $value) { ?>
+	<?php foreach ($shot_code_list as $key => $value) { $short_code_value_id = $value['id']?>
 		<div class="panel-group" id="accordion<?php echo $key ?>">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h4 class="panel-title">
 						<a data-toggle="collapse" data-parent="#accordion<?php echo $key ?>" href="#collapse<?php echo $key ?>">Short Code List <?php echo $key ?></a>
+						<!-- <a href="#" id="delete_short_code_value" class="pull-right">Delete</a> -->
 					</h4>
 				</div>
 				<div id="collapse<?php echo $key ?>" class="panel-collapse collapse in">
@@ -22,7 +23,9 @@
 						<table class="table">
 							<thead><tr><?php foreach($table_head as $key =>$value){
 							echo "<td>$value<td>";
-							}?></tr></thead>
+							}?>
+							<button class="pull-right btn btn-primary delete_short_code_value" id="<?php echo $short_code_value_id;?>">Delete</button>
+							</tr></thead>
 							<tbody><tr><?php foreach($table_body as $key =>$value){ if(is_array($value)){
 								$value = implode(", ",$value);
 								echo "<td>$value<td>";

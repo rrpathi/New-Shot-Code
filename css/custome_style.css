@@ -1,20 +1,4 @@
-.wp_main_short_code_remove{
-	margin-top: 20px;
-}
-.Add_more_checkbox{
-	margin-top: 20px;
-}
-.remove_check_box{
-	margin-top: 20px;
-}
 
-.remove_radio_button{
-     margin-top: 20px;
-}
-
-.add_more_radio_button{
-     margin-top: 20px;
-}
 .short_code_form_design{
      color: #666; 
      background: #fff; 
@@ -37,4 +21,20 @@
      cursor: pointer;
 }
 
+.wp_main_short_code_remove{
+     margin-top: 20px;
+}
+.Add_more_checkbox{
+     margin-top: 20px;
+}
+.remove_check_box{
+     margin-top: 20px;
+}
 
+.remove_radio_button{
+     margin-top: 20px;
+}
+
+.add_more_radio_button{
+     margin-top: 20px;
+}
