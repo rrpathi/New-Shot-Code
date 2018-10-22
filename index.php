@@ -163,7 +163,7 @@ class DropboxUpload{
                     }
                 }
                 echo "<form action='#' method='POST' id='form_data' enctype='multipart/form-data'>
-                $result.<input type='submit' id='store_form_value' name='register'>
+                $result.<br /><input type='submit' id='store_form_value' name='register'>
                 </form>";
                 });
             }
