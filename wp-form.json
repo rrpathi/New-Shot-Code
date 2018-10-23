@@ -1,0 +1,13 @@
+
+{
+    	"name" : "Plugin Update",
+    	"slug" : "wp-form",
+    	"download_url" : "http://localhost/wp-form.zip",
+    	"version" : "2.0",
+		"upgrade_notice" : "Plugin update is available.",
+		"sections" : {
+			"description" : "This is the plugin to test your updater script",
+			"installation" : "Upload the plugin to your blog, Activate it, that's it!",
+			"changelog" : "<h4>1.1 –  August 17, 2017</h4><ul><li>Some bugs are fixed.</li><li>Release date.</li></ul>"
+	}
+}
