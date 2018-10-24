@@ -3,7 +3,7 @@
 Plugin Name:  WP Form Plugin
 Plugin URI:   https://developer.wordpress.org/plugins/the-basics/
 Description:  Basic WordPress Plugin Header Comment
-Version:      3.0
+Version:      2.0
 Author:       WordPress.org
 Author URI:   https://developer.wordpress.org/
 */
@@ -22,7 +22,6 @@ class DropboxUpload{
 	public function initial(){
 		$this->pre_define();
 		$this->hooks();
-		$this->db_prefix();
 		$this->action();
 		$this->apply_filter();
 	}
@@ -66,7 +65,8 @@ class DropboxUpload{
 		$latest_plugin_version = json_decode($server_data['body']);
 		$server_plugin_version = $latest_plugin_version->version;
 		if($server_plugin_version >$localplugin_version){
-			$res = new DropboxUpload();
+			$res = new stdClass();
+			// type casting
 			$res->slug = $latest_plugin_version->slug;
 			$res->new_version = $latest_plugin_version->version;
 			$res->plugin = $plugin_slug;
