@@ -3,7 +3,7 @@
 Plugin Name:  WP Form Plugin
 Plugin URI:   https://developer.wordpress.org/plugins/the-basics/
 Description:  Basic WordPress Plugin Header Comment
-Version:      2.0
+Version:      3.0
 Author:       WordPress.org
 Author URI:   https://developer.wordpress.org/
 */
@@ -35,21 +35,25 @@ class DropboxUpload{
 	public function action(){
 		add_action('admin_enqueue_scripts',array($this,'script'));
 		add_action('wp_enqueue_scripts',array($this,'common_stylesheet'));
-		add_action('admin_menu',array($this,'menu'));
 		// add_action('wp_ajax_add_dropbox_account_details',array($this,'credentials'));
 		// add_action('wp_ajax_my_ajax_function',array($this,'dropbox_sdk'));
 		add_action('wp_ajax_shot_code_register',array($this,'add_new_shotcode'));
 		add_action('wp_ajax_edit_short_code',array($this,'edit_short_code'));
 		add_action('wp_ajax_delete_short_code',array($this,'delete_short_code'));
 		add_action('wp_ajax_update_short_code_details',array($this,'update_short_code_details'));
-		add_filter('shot-code',array($this,'shot_code_callback'),10,1);
+		add_filter('shot-code',array($this,'shot_code_callback'));
 		add_action('wp_ajax_delete_short_code_value',array($this,'delete_short_code_value'));
 		add_action('init',array($this,'store_form_data'));
+		add_action( 'plugins_loaded', array($this,'speedup')); 
+	}
+
+	public function speedup(){
+		add_action('admin_menu',array($this,'menu'));
 		add_filter('site_transient_update_plugins',array($this,'push_update'));
 
 	}
 
-	function push_update($transient){
+	public function push_update($transient){
 		 $plugin_slug = basename(dirname(__FILE__)).'/'.basename(__FILE__);
 		 $localplugin_version =  $transient->checked[$plugin_slug];
 		// // Remote Url
