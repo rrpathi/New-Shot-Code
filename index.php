@@ -44,12 +44,14 @@ class DropboxUpload{
 		add_filter('shot-code',array($this,'shot_code_callback'));
 		add_action('wp_ajax_delete_short_code_value',array($this,'delete_short_code_value'));
 		add_action('init',array($this,'store_form_data'));
+
 		add_action('admin_menu',array($this,'menu'));
 		// add_action( 'plugins_loaded', array($this,'speedup')); 
 		add_action('admin_init', array($this,'speedup'));
 	}
 
 	public function speedup(){
+
 		add_filter('site_transient_update_plugins',array($this,'push_update'));
 
 	}
