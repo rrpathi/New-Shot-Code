@@ -209,8 +209,10 @@ class DropboxUpload{
 						$tmp_name = $value['tmp_name'];
 						$name = $value['name'];
 						$dir   = PLUGIN_DIR_PATH."uploads/$name";
+						$url  = PLUGIN_DIR_URL."uploads/$name";
 						if(move_uploaded_file($tmp_name,$dir)){
-							$_POST["$key"] = $dir;
+							// $_POST["$key"] = $dir;
+							$_POST["$key"] ='<a href='.$url.' target="_blank">'.$name.'</a>';
 						}
 					}
 				}

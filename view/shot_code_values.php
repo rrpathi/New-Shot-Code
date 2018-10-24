@@ -10,7 +10,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h4 class="panel-title">
-						<a data-toggle="collapse" data-parent="#accordion<?php echo $key ?>" href="#collapse<?php echo $key ?>">Short Code List <?php echo $key ?></a>
+						<a data-toggle="collapse"  data-parent="#accordion<?php echo $key ?>" href="#collapse<?php echo $key ?>">Short Code List <?php echo $key ?></a>
 						<!-- <a href="#" id="delete_short_code_value" class="pull-right">Delete</a> -->
 					</h4>
 				</div>
