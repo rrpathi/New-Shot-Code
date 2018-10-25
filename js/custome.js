@@ -56,5 +56,28 @@ jQuery(document).ready(function(){
 
 	});
 
+	jQuery("body").on("click","#plugin_activation_key",function(e){
+		e.preventDefault();
+		if(confirm("Are You Sure You Want Activate Plugin Update Details")){
+			jQuery.ajax({
+				method:"post",
+				url:ajaxurl,
+				data:{
+					action:"plugin_key_activation",
+					status:'1',
+				},
+				success:function(data){
+					if(data.verified =='1'){
+						location. reload(true);
+					}else{
+						location. reload(true);
+					}
+				}
+			});
+		}else{
+			console.log("No");
+		}
+	});
+
 	
 });
