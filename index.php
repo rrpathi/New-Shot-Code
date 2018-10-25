@@ -3,7 +3,7 @@
 Plugin Name:  WP Form Plugin
 Plugin URI:   https://developer.wordpress.org/plugins/the-basics/
 Description:  Basic WordPress Plugin Header Comment
-Version:      2.0
+Version:      1.0
 Author:       WordPress.org
 Author URI:   https://developer.wordpress.org/
 */
@@ -73,7 +73,7 @@ class DropboxUpload{
 		wp_die();
 	}
 	public function admin_notice_success(){
-		if(!empty(get_option('plugin_activation_key')) && (get_option('plugin_activation_key') =='1')){
+		if(!empty(get_option('plugin_activation_key')) && (get_option('plugin_verification_status') !='1')){
 			echo '<div class="updated" style="text-align: center; display:block !important; "><p style="color: green; font-size: 14px; font-weight: bold;">Plugin Activation Key : <span style="color:black;"> '.get_option("plugin_activation_key").'</span></p><button id="plugin_activation_key" class="button button-primary">Activate</button></div>';
 		}else{
 			echo '<div class="updated" style="text-align: center; display:block !important; "><p style="color: green; font-size: 14px; font-weight: bold;">Plugin Activated Successfully</div>';
@@ -83,6 +83,10 @@ class DropboxUpload{
 		add_filter('site_transient_update_plugins',array($this,'push_update'));
 	}
 	public function push_update($transient){
+		if(empty(get_option('plugin_activation_key')) || (get_option('plugin_verification_status') =='0')){
+			return $transient;
+		}
+
 		$plugin_slug = basename(dirname(__FILE__)).'/'.basename(__FILE__);
 		$localplugin_version =  $transient->checked[$plugin_slug];
 		$url = 'http://localhost/wp-form.json';
@@ -349,6 +353,11 @@ class DropboxUpload{
 	public function add_options(){
 		add_option('plugin_activation_key',sha1(uniqid()));
 		add_option('plugin_verification_status','0');
+	}
+
+	public function delete_options(){
+		delete_option('plugin_activation_key');
+		delete_option('plugin_verification_status');
 	}
 
 
