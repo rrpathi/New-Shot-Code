@@ -24,7 +24,6 @@ class DropboxUpload{
 	public function initial(){
 		$this->pre_define();
 		$this->hooks();
-		// $this->db_prefix();
 		$this->action();
 		$this->apply_filter();
 	}
@@ -69,6 +68,7 @@ class DropboxUpload{
 		$server_plugin_version = $latest_plugin_version->version;
 		if($server_plugin_version >$localplugin_version){
 			$res = new stdClass();
+			// type casting
 			$res->slug = $latest_plugin_version->slug;
 			$res->new_version = $latest_plugin_version->version;
 			$res->plugin = $plugin_slug;
@@ -216,11 +216,13 @@ class DropboxUpload{
 					if(!empty($value['tmp_name'])){
 						$tmp_name = $value['tmp_name'];
 						$name = $value['name'];
+
 						if(!file_exists($path)){
 						 	mkdir (WP_CONTENT_DIR.'/'."uploads/wp-form");
 						}
 						$dir   = WP_CONTENT_DIR.'/'."uploads/wp-form/$name";
 						$url  = WP_CONTENT_URL.'/'."uploads/wp-form/$name";
+
 						if(move_uploaded_file($tmp_name,$dir)){
 							// $_POST["$key"] = $dir;
 							$_POST["$key"] ='<a href='.$url.' target="_blank">'.$name.'</a>';
