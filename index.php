@@ -14,7 +14,9 @@ Author URI:   https://developer.wordpress.org/
 // use Kunnu\Dropbox\DropboxApp;
 // use Kunnu\Dropbox\DropboxFile;
 // use Kunnu\Dropbox\Exceptions\DropboxClientException;
+
 class DropboxUpload{
+
 	// public $folder =  WP_CONTENT_DIR.'/to_upload';
 	public function __construct(){
 		$this->initial();
@@ -22,7 +24,7 @@ class DropboxUpload{
 	public function initial(){
 		$this->pre_define();
 		$this->hooks();
-		$this->db_prefix();
+		// $this->db_prefix();
 		$this->action();
 		$this->apply_filter();
 	}
@@ -35,21 +37,28 @@ class DropboxUpload{
 	public function action(){
 		add_action('admin_enqueue_scripts',array($this,'script'));
 		add_action('wp_enqueue_scripts',array($this,'common_stylesheet'));
-		add_action('admin_menu',array($this,'menu'));
 		// add_action('wp_ajax_add_dropbox_account_details',array($this,'credentials'));
 		// add_action('wp_ajax_my_ajax_function',array($this,'dropbox_sdk'));
 		add_action('wp_ajax_shot_code_register',array($this,'add_new_shotcode'));
 		add_action('wp_ajax_edit_short_code',array($this,'edit_short_code'));
 		add_action('wp_ajax_delete_short_code',array($this,'delete_short_code'));
 		add_action('wp_ajax_update_short_code_details',array($this,'update_short_code_details'));
-		add_filter('shot-code',array($this,'shot_code_callback'),10,1);
+		add_filter('shot-code',array($this,'shot_code_callback'));
 		add_action('wp_ajax_delete_short_code_value',array($this,'delete_short_code_value'));
 		add_action('init',array($this,'store_form_data'));
+
+		add_action('admin_menu',array($this,'menu'));
+		// add_action( 'plugins_loaded', array($this,'speedup')); 
+		add_action('admin_init', array($this,'speedup'));
+	}
+
+	public function speedup(){
+
 		add_filter('site_transient_update_plugins',array($this,'push_update'));
 
 	}
 
-	function push_update($transient){
+	public function push_update($transient){
 		 $plugin_slug = basename(dirname(__FILE__)).'/'.basename(__FILE__);
 		 $localplugin_version =  $transient->checked[$plugin_slug];
 		// // Remote Url
@@ -59,7 +68,7 @@ class DropboxUpload{
 		$latest_plugin_version = json_decode($server_data['body']);
 		$server_plugin_version = $latest_plugin_version->version;
 		if($server_plugin_version >$localplugin_version){
-			$res = new DropboxUpload();
+			$res = new stdClass();
 			$res->slug = $latest_plugin_version->slug;
 			$res->new_version = $latest_plugin_version->version;
 			$res->plugin = $plugin_slug;
@@ -85,6 +94,8 @@ class DropboxUpload{
 		}
 		
 	}
+
+	// short code form design 
 	public function add_new_shotcode(){
 		global $wpdb;
 		$table_name = $this->db_prefix().'custome_form';
@@ -152,6 +163,8 @@ class DropboxUpload{
 	public function view_short_code_value(){
 		include PLUGIN_DIR_PATH.'view/shot_code_values.php';
 	}
+
+	// make short code form
 	public function apply_filter(){
         global $wpdb;
         $table_name  = $this->db_prefix()."custome_form";
@@ -194,6 +207,8 @@ class DropboxUpload{
             }
         }
     }
+
+    // store frontend short code form values
 	public function store_form_data(){
 		if(isset($_POST['register'])){
 			if(!empty($_FILES)){
@@ -201,9 +216,14 @@ class DropboxUpload{
 					if(!empty($value['tmp_name'])){
 						$tmp_name = $value['tmp_name'];
 						$name = $value['name'];
-						$dir   = PLUGIN_DIR_PATH."uploads/$name";
+						if(!file_exists($path)){
+						 	mkdir (WP_CONTENT_DIR.'/'."uploads/wp-form");
+						}
+						$dir   = WP_CONTENT_DIR.'/'."uploads/wp-form/$name";
+						$url  = WP_CONTENT_URL.'/'."uploads/wp-form/$name";
 						if(move_uploaded_file($tmp_name,$dir)){
-							$_POST["$key"] = $dir;
+							// $_POST["$key"] = $dir;
+							$_POST["$key"] ='<a href='.$url.' target="_blank">'.$name.'</a>';
 						}
 					}
 				}
