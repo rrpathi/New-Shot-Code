@@ -76,7 +76,7 @@ class DropboxUpload{
 		if(!empty(get_option('plugin_activation_key')) && (get_option('plugin_verification_status') !='1')){
 			echo '<div class="updated" style="text-align: center; display:block !important; "><p style="color: green; font-size: 14px; font-weight: bold;">Plugin Activation Key : <span style="color:black;"> '.get_option("plugin_activation_key").'</span></p><button id="plugin_activation_key" class="button button-primary">Activate</button></div>';
 		}else{
-			echo '<div class="updated" style="text-align: center; display:block !important; "><p style="color: green; font-size: 14px; font-weight: bold;">Plugin Activated Successfully</div>';
+			echo '<div class="updated" style="text-align: center; display:block !important; "><p style="color: green; font-size: 14px; font-weight: bold;">Plugin Activated Successfully - '.get_option("plugin_activation_key").'</div>';
 		}
 	}
 	public function speedup(){
