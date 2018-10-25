@@ -306,6 +306,7 @@ class DropboxUpload{
 		register_deactivation_hook( __FILE__,array($this,'deactivation_hook'));
 	}
 	public function deactivation_hook(){
+		$this->delete_options();
 		global $wpdb;
 		$table_name  = $this->db_prefix()."dropbox_details";
 		$table_name_short_code = $this->db_prefix()."custome_form";
