@@ -363,19 +363,22 @@ class DropboxUpload{
 		delete_option('plugin_verification_status');
 	}
 
-	function create_posttype() {
-  register_post_type( 'wpr_shortcodes',
-    array(
-      'labels' => array(
-        'name' => __( 'Shortcodes' ),
-        'singular_name' => __( 'Shortcode' )
-      ),
-      'public' => true,
-      // 'has_archive' => true,
-      // 'rewrite' => array('slug' => 'products'),
-    )
-  );
-}
+// 	public function create_posttype() {
+//   register_post_type( 'wpr_shortcodes',
+//     array(
+//       'labels' => array(
+//         'name' => __( 'Shortcodes' ),
+//         'singular_name' => __( 'Shortcode' )
+//       ),
+//       'public' => true,
+//       'rewrite' => false,
+// 	  'query_var' => false,
+// 	 'capability_type' => 'page',
+//       // 'has_archive' => true,
+//       // 'rewrite' => array('slug' => 'products'),
+//     )
+//   );
+// }
 
 
 		// ABSPATH is current project Directory dropbox-wordpress
