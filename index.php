@@ -38,7 +38,7 @@ class DropboxUpload{
 		add_action('admin_menu',array($this,'menu'));
 		add_action('admin_enqueue_scripts',array($this,'script'));
 		add_action('wp_enqueue_scripts',array($this,'common_stylesheet'));
-		add_action ('init',array($this,'create_posttype'));
+		// add_action ('init',array($this,'create_posttype'));
 		// add_action('wp_ajax_add_dropbox_account_details',array($this,'credentials'));
 		// add_action('wp_ajax_my_ajax_function',array($this,'dropbox_sdk'));
 
@@ -117,21 +117,38 @@ class DropboxUpload{
 	}
 	public function add_new_shotcode(){
 		global $wpdb;
-		$table_name = $this->db_prefix().'custome_form';
 		$shot_code = json_decode(stripslashes($_POST['shot_code']));
 		$form_array = serialize($shot_code);
-		// $shortcode_name = $shot_code->shortcode_name;
-		$shortcode_name = str_replace(" ", "-",$shot_code->shortcode_name);
-		$column_values = array('form_id'=>$shortcode_name,'string'=>$form_array);
-		$shotcode = $wpdb->insert($table_name,$column_values);
-		if($shotcode){
+		$post_title = $shot_code->shortcode_name;
+		$post_content = str_replace(" ", "-",$shot_code->shortcode_name);
+		$id = wp_insert_post(array('post_title'=>$post_title, 'post_type'=>'wps_custom_post', 'post_content'=>$post_content,'post_status' =>'publish'));
+		if(add_post_meta( $id,$post_title, $form_array, false )){
 			echo json_encode(array('status'=>'1'));
 			wp_die();
 		}else{
 			echo json_encode(array('status'=>'0'));
 			wp_die();
 		}
+
+		// global $wpdb;
+		// $table_name = $this->db_prefix().'custome_form';
+		// $shot_code = json_decode(stripslashes($_POST['shot_code']));
+		// $form_array = serialize($shot_code);
+		// // $shortcode_name = $shot_code->shortcode_name;
+		// $shortcode_name = str_replace(" ", "-",$shot_code->shortcode_name);
+		// $column_values = array('form_id'=>$shortcode_name,'string'=>$form_array);
+		// $shotcode = $wpdb->insert($table_name,$column_values);
+		// if($shotcode){
+		// 	echo json_encode(array('status'=>'1'));
+		// 	wp_die();
+		// }else{
+		// 	echo json_encode(array('status'=>'0'));
+		// 	wp_die();
+		// }
+
+
 	}
+
 	public function list_shot_code(){
 		include PLUGIN_DIR_PATH.'view/list_shot_code.php';
 	}
@@ -180,19 +197,21 @@ class DropboxUpload{
 
 	// Make A Short add-shortcode();
 	public function shot_code_callback($value){
+
 		foreach ($value as $key => $stored_data) {
-			$shortcode[$stored_data['form_id']] = json_decode(json_encode(unserialize($stored_data['string'])),true);
+			$shortcode[$stored_data['post_content']] = json_decode(json_encode(unserialize($stored_data['meta_value'])),true);
 		}
 		return $shortcode;
 	}
 	public function apply_filter(){
         global $wpdb;
-        $table_name  = $this->db_prefix()."custome_form";
-        $value =  $wpdb->get_results("SELECT * FROM $table_name ",ARRAY_A);
+        $value = $wpdb->get_results('SELECT *  FROM '.$wpdb->prefix.'postmeta AS postmeta  INNER JOIN '. $wpdb->prefix.'posts AS posts ON postmeta.post_id =  posts.id WHERE posts.post_type ="wps_custom_post"',ARRAY_A);
+        // $table_name  = $this->db_prefix()."custome_form";
+        // $value =  $wpdb->get_results("SELECT * FROM $table_name ",ARRAY_A);
         if(!empty($value)){
             $apply_filter = apply_filters('shot-code',$value);
             foreach ($apply_filter as  $shortcode_name => $shortcode_value) {
-                unset($shortcode_value['shortcode_name']);
+                // unset($shortcode_value['shortcode_name']);
                 add_shortcode($shortcode_name,function() use ($shortcode_value){
                 foreach ($shortcode_value as $key => $new_value) {
                     foreach ($new_value as $key => $value) {
@@ -226,7 +245,9 @@ class DropboxUpload{
                 });
             }
         }
-    }
+	 }       
+
+    
 
     // Short Code Form Data Values
     public function store_form_data(){
