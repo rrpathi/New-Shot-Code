@@ -205,45 +205,52 @@ class DropboxUpload{
 	}
 	public function apply_filter(){
         global $wpdb;
-        $value = $wpdb->get_results('SELECT *  FROM '.$wpdb->prefix.'postmeta AS postmeta  INNER JOIN '. $wpdb->prefix.'posts AS posts ON postmeta.post_id =  posts.id WHERE posts.post_type ="wps_custom_post"',ARRAY_A);
-        // $table_name  = $this->db_prefix()."custome_form";
-        // $value =  $wpdb->get_results("SELECT * FROM $table_name ",ARRAY_A);
+        $value = $wpdb->get_results('SELECT postmeta.meta_value,posts.post_content  FROM '.$wpdb->prefix.'postmeta AS postmeta  INNER JOIN '. $wpdb->prefix.'posts AS posts ON postmeta.post_id =  posts.id WHERE posts.post_type ="wps_custom_post"',ARRAY_A);
+        echo "<pre>";
+        print_r($value);
+
+        $table_name  = $this->db_prefix()."custome_form";
+        $value =  $wpdb->get_results("SELECT * FROM $table_name ",ARRAY_A);
+        echo "<pre>";
+        print_r($value);
+        exit();
         if(!empty($value)){
             $apply_filter = apply_filters('shot-code',$value);
-            foreach ($apply_filter as  $shortcode_name => $shortcode_value) {
-                // unset($shortcode_value['shortcode_name']);
-                add_shortcode($shortcode_name,function() use ($shortcode_value){
-                foreach ($shortcode_value as $key => $new_value) {
-                    foreach ($new_value as $key => $value) {
-                    if($value['field_type'] =="radio"){
-                    $result.=$value['label_name']."<br />";
-                    foreach ($value['radio_button'] as $key => $radio_value) {
-                    // $result .= "$radio_value:<input type='".$value['field_type']."' value='".$radio_value."' name='".str_replace(' ','',$value['label_name'])."'><br>";
-                   $result .= "<label class='short_code_checkbox_inline'><input type='".$value['field_type']."' value='".$radio_value."' name='".str_replace(' ','',$value['label_name'])."' >$radio_value</label>";
-                    }
-                   $result .="<br />"; 
-                    }
-                    if(($value['field_type'] !="radio")&&($value['field_type'] !='checkbox')){
-                    $label_name = $value['label_name'];
-                    $type = $value['field_type'];
-                    $result .= "$label_name:<input class='short_code_form_design' type='".$type."' name='".str_replace(' ','',$label_name)."'>";
-                    // $result .= <label class="checkbox-inline"><input type="checkbox" value="">Option 1</label>
-                    }
-                    if($value['field_type']=='checkbox'){
-                    $result.=$value['label_name']."<br />";
-                    foreach ($value['checkbox'] as $key => $checkbox_name) {
-                    // $result .= "$checkbox_name<input type='".$value['field_type']."' value='".$checkbox_name."' class='short_code_checkbox_inline' name='".str_replace(' ','',$value['label_name'])."[]'><br>";
-                    $result .= "<label class='short_code_checkbox_inline'><input type='".$value['field_type']."' value='".$checkbox_name."' name='".str_replace(' ','',$value['label_name'])."[]' >$checkbox_name</label>";
-                    	}
-                    }
-                    $result .="<br />"; 
-                    }
-                }
-                echo "<form action='#' method='POST' id='form_data' enctype='multipart/form-data'>
-                $result.<br /><input type='submit' id='store_form_value' name='register'>
-                </form>";
-                });
-            }
+            exit("hi");
+            // foreach ($apply_filter as  $shortcode_name => $shortcode_value) {
+            //     // unset($shortcode_value['shortcode_name']);
+            //     add_shortcode($shortcode_name,function() use ($shortcode_value){
+            //     foreach ($shortcode_value as $key => $new_value) {
+            //         foreach ($new_value as $key => $value) {
+            //         if($value['field_type'] =="radio"){
+            //         $result.=$value['label_name']."<br />";
+            //         foreach ($value['radio_button'] as $key => $radio_value) {
+            //         // $result .= "$radio_value:<input type='".$value['field_type']."' value='".$radio_value."' name='".str_replace(' ','',$value['label_name'])."'><br>";
+            //        $result .= "<label class='short_code_checkbox_inline'><input type='".$value['field_type']."' value='".$radio_value."' name='".str_replace(' ','',$value['label_name'])."' >$radio_value</label>";
+            //         }
+            //        $result .="<br />"; 
+            //         }
+            //         if(($value['field_type'] !="radio")&&($value['field_type'] !='checkbox')){
+            //         $label_name = $value['label_name'];
+            //         $type = $value['field_type'];
+            //         $result .= "$label_name:<input class='short_code_form_design' type='".$type."' name='".str_replace(' ','',$label_name)."'>";
+            //         // $result .= <label class="checkbox-inline"><input type="checkbox" value="">Option 1</label>
+            //         }
+            //         if($value['field_type']=='checkbox'){
+            //         $result.=$value['label_name']."<br />";
+            //         foreach ($value['checkbox'] as $key => $checkbox_name) {
+            //         // $result .= "$checkbox_name<input type='".$value['field_type']."' value='".$checkbox_name."' class='short_code_checkbox_inline' name='".str_replace(' ','',$value['label_name'])."[]'><br>";
+            //         $result .= "<label class='short_code_checkbox_inline'><input type='".$value['field_type']."' value='".$checkbox_name."' name='".str_replace(' ','',$value['label_name'])."[]' >$checkbox_name</label>";
+            //         	}
+            //         }
+            //         $result .="<br />"; 
+            //         }
+            //     }
+            //     echo "<form action='#' method='POST' id='form_data' enctype='multipart/form-data'>
+            //     $result.<br /><input type='submit' id='store_form_value' name='register'>
+            //     </form>";
+            //     });
+            // }
         }
 	 }       
 
