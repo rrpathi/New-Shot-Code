@@ -38,6 +38,7 @@ class DropboxUpload{
 		add_action('admin_menu',array($this,'menu'));
 		add_action('admin_enqueue_scripts',array($this,'script'));
 		add_action('wp_enqueue_scripts',array($this,'common_stylesheet'));
+		add_action ('init',array($this,'create_posttype'));
 		// add_action('wp_ajax_add_dropbox_account_details',array($this,'credentials'));
 		// add_action('wp_ajax_my_ajax_function',array($this,'dropbox_sdk'));
 
@@ -54,11 +55,12 @@ class DropboxUpload{
 
 		add_action('admin_init', array($this,'speedup'));
 		add_action('wp_ajax_plugin_key_activation',array($this,'plugin_key_activate'));
-		add_action('admin_notices',array($this,'admin_notice_success'));
+		add_action('load-plugins.php',array($this,'plugin_notification'));
 	}
-
-
-
+	public function plugin_notification(){
+		add_action('admin_notices',array($this,'admin_notice_success'));
+		
+	}
 
 		// Plugin Update Related Work
 	public function plugin_key_activate(){
@@ -361,6 +363,19 @@ class DropboxUpload{
 		delete_option('plugin_verification_status');
 	}
 
+	function create_posttype() {
+  register_post_type( 'wpr_shortcodes',
+    array(
+      'labels' => array(
+        'name' => __( 'Shortcodes' ),
+        'singular_name' => __( 'Shortcode' )
+      ),
+      'public' => true,
+      // 'has_archive' => true,
+      // 'rewrite' => array('slug' => 'products'),
+    )
+  );
+}
 
 
 		// ABSPATH is current project Directory dropbox-wordpress
