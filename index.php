@@ -48,6 +48,12 @@ class DropboxUpload{
 		add_action('admin_menu',array($this,'menu'));
 		// add_action( 'plugins_loaded', array($this,'speedup')); 
 		add_action('admin_init', array($this,'speedup'));
+		add_action('wp_ajax_plugin_key_activation',array($this,'plugin_key_activate'));
+		add_action('load-plugins.php',array($this,'plugin_notification'));
+	}
+	public function plugin_notification(){
+		add_action('admin_notices',array($this,'admin_notice_success'));
+		
 	}
 
 
@@ -254,6 +260,7 @@ class DropboxUpload{
 	}
 
 	public function deactivation_hook(){
+		$this->delete_options();
 		global $wpdb;
 		$table_name  = $this->db_prefix()."dropbox_details";
 		$table_name_short_code = $this->db_prefix()."custome_form";
@@ -264,6 +271,7 @@ class DropboxUpload{
 	}
 
 	public function activation_table(){
+		$this->add_options();
 		$table_name  = $this->db_prefix()."dropbox_details";
 		$sql = "CREATE TABLE `$table_name` (
 		`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -341,6 +349,38 @@ class DropboxUpload{
 			wp_die();
 		}
 	}
+
+		public function plugin_key_activate(){
+		if($_POST['status'] =='1'){
+			if(update_option('plugin_verification_status','1')){
+				echo json_encode(array('verified'=>'1'));
+			}else{
+				echo json_encode(array('verified'=>'0'));
+			}
+		}
+		wp_die();
+	}
+
+		public function admin_notice_success(){
+		if(!empty(get_option('plugin_activation_key')) && (get_option('plugin_verification_status') !='1')){
+			echo '<div class="updated" style="text-align: center; display:block !important; "><p style="color: green; font-size: 14px; font-weight: bold;">Plugin Activation Key : <span style="color:black;"> '.get_option("plugin_activation_key").'</span></p><button id="plugin_activation_key" class="button button-primary">Activate</button></div>';
+		}else{
+			echo '<div class="updated" style="text-align: center; display:block !important; "><p style="color: green; font-size: 14px; font-weight: bold;">Plugin Activated Successfully - '.get_option("plugin_activation_key").'</div>';
+
+
+		}
+	}
+
+	public function add_options(){
+		add_option('plugin_activation_key',sha1(uniqid()));
+		add_option('plugin_verification_status','0');
+	}
+	public function delete_options(){
+		delete_option('plugin_activation_key');
+		delete_option('plugin_verification_status');
+	}
+
+
 
 	// public function update_short_code_details(){
 	// 		 global $wpdb;
