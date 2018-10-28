@@ -94,18 +94,28 @@ class DropboxUpload{
 	}
 	public function add_new_shotcode(){
 		global $wpdb;
+		$table_name = $this->db_prefix().'postmeta';
 		$shot_code = json_decode(stripslashes($_POST['shot_code']));
 		$form_array = serialize($shot_code);
-		$post_title = $shotcode->shortcode_name;
+		$post_title = $shot_code->shortcode_name;
 		$post_content = str_replace(" ", "-",$shot_code->shortcode_name);
 		$id = wp_insert_post(array('post_title'=>$post_title, 'post_type'=>'wps_custom_post', 'post_content'=>$post_content,'post_status' =>'publish'));
-		if(add_post_meta( $id,$post_title, $form_array, false )){
+		$column_values = array('post_id'=>$id,'meta_key'=>$post_title,'meta_value'=>$form_array);
+		$add_post_meta = $wpdb->insert($table_name,$column_values);
+		if($add_post_meta){
 			echo json_encode(array('status'=>'1'));
 			wp_die();
 		}else{
 			echo json_encode(array('status'=>'0'));
 			wp_die();
 		}
+		// if(add_post_meta( $id,$post_title, $form_array, false )){
+		// 	echo json_encode(array('status'=>'1'));
+		// 	wp_die();
+		// }else{
+		// 	echo json_encode(array('status'=>'0'));
+		// 	wp_die();
+		// }
 	}
 	public function menu(){
 		add_menu_page('Form Page','Form','manage_options','create-form');
@@ -160,13 +170,13 @@ class DropboxUpload{
 
  	public function apply_filter(){
         global $wpdb;
-        $table_name  = $this->db_prefix()."custome_form";
+        // $table_name  = $this->db_prefix()."custome_form";
          $value = $wpdb->get_results('SELECT postmeta.meta_value,posts.post_content  FROM '.$wpdb->prefix.'postmeta AS postmeta  INNER JOIN '. $wpdb->prefix.'posts AS posts ON postmeta.post_id =  posts.id WHERE posts.post_type ="wps_custom_post"',ARRAY_A);
 
         if(!empty($value)){
             // $apply_filter = apply_filters('shot-code',$value);
             foreach ($value as $key => $stored_data) {
-			$shortcode[$stored_data['form_id']] = json_decode(json_encode(unserialize($stored_data['string'])),true);
+			$shortcode[$stored_data['post_content']] = json_decode(json_encode(unserialize($stored_data['meta_value'])),true);
 			}
             foreach ($shortcode as  $shortcode_name => $shortcode_value) {
                 unset($shortcode_value['shortcode_name']);
