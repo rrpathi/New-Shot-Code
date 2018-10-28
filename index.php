@@ -38,7 +38,7 @@ class DropboxUpload{
 		add_action('admin_menu',array($this,'menu'));
 		add_action('admin_enqueue_scripts',array($this,'script'));
 		add_action('wp_enqueue_scripts',array($this,'common_stylesheet'));
-		add_action ('init',array($this,'create_posttype'));
+		// add_action ('init',array($this,'create_posttype'));
 		// add_action('wp_ajax_add_dropbox_account_details',array($this,'credentials'));
 		// add_action('wp_ajax_my_ajax_function',array($this,'dropbox_sdk'));
 
