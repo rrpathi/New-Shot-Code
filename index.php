@@ -179,19 +179,22 @@ class DropboxUpload{
 	}
 
 	// Make A Short add-shortcode();
-	public function shot_code_callback($value){
-		foreach ($value as $key => $stored_data) {
-			$shortcode[$stored_data['form_id']] = json_decode(json_encode(unserialize($stored_data['string'])),true);
-		}
-		return $shortcode;
-	}
+	// public function shot_code_callback($value){
+	// 	foreach ($value as $key => $stored_data) {
+	// 		$shortcode[$stored_data['form_id']] = json_decode(json_encode(unserialize($stored_data['string'])),true);
+	// 	}
+	// 	return $shortcode;
+	// }
 	public function apply_filter(){
         global $wpdb;
         $table_name  = $this->db_prefix()."custome_form";
         $value =  $wpdb->get_results("SELECT * FROM $table_name ",ARRAY_A);
         if(!empty($value)){
-            $apply_filter = apply_filters('shot-code',$value);
-            foreach ($apply_filter as  $shortcode_name => $shortcode_value) {
+            // $apply_filter = apply_filters('shot-code',$value);
+            foreach ($value as $key => $stored_data) {
+			$shortcode[$stored_data['form_id']] = json_decode(json_encode(unserialize($stored_data['string'])),true);
+			}
+            foreach ($shortcode as  $shortcode_name => $shortcode_value) {
                 unset($shortcode_value['shortcode_name']);
                 add_shortcode($shortcode_name,function() use ($shortcode_value){
                 foreach ($shortcode_value as $key => $new_value) {
