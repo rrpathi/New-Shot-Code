@@ -117,8 +117,10 @@ class DropboxUpload{
 
 	public function delete_short_code(){
 		global $wpdb;
-		$table_name = $this->db_prefix().'custome_form';
-		$result = $wpdb->delete( $table_name, array( 'id' =>$_POST['short_code_id']));
+		$table_post = $this->db_prefix().'posts';
+		$table_post_meta = $this->db_prefix().'postmeta';
+		$result = $wpdb->delete( $table_post, array( 'id' =>$_POST['short_code_id']));
+		$result = $wpdb->delete( $table_post_meta, array( 'post_id' =>$_POST['short_code_id']));
 		if($result){
 			echo json_encode(array('status'=>'1'));
 			wp_die();
@@ -262,8 +264,8 @@ class DropboxUpload{
 	public function deactivation_hook(){
 		$this->delete_options();
 		global $wpdb;
-		$table_name  = $this->db_prefix()."dropbox_details";
-		$table_name_short_code = $this->db_prefix()."custome_form";
+		// $table_name  = $this->db_prefix()."dropbox_details";
+		// $table_name_short_code = $this->db_prefix()."custome_form";
 		$shortcode_values = $this->db_prefix()."shortcode_values";
 		$wpdb->query("TRUNCATE TABLE $table_name ");
 		$wpdb->query("TRUNCATE TABLE $table_name_short_code ");
@@ -272,24 +274,24 @@ class DropboxUpload{
 
 	public function activation_table(){
 		$this->add_options();
-		$table_name  = $this->db_prefix()."dropbox_details";
-		$sql = "CREATE TABLE `$table_name` (
-		`id` int(11) NOT NULL AUTO_INCREMENT,
-		`app_key` varchar(30) NOT NULL,
-		`app_secret` varchar(30) NOT NULL,
-		`access_token` varchar(150) NOT NULL,
-		PRIMARY KEY (`id`)
-		) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-		";
+		// $table_name  = $this->db_prefix()."dropbox_details";
+		// $sql = "CREATE TABLE `$table_name` (
+		// `id` int(11) NOT NULL AUTO_INCREMENT,
+		// `app_key` varchar(30) NOT NULL,
+		// `app_secret` varchar(30) NOT NULL,
+		// `access_token` varchar(150) NOT NULL,
+		// PRIMARY KEY (`id`)
+		// ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+		// ";
 
-		$table_name_short_code = $this->db_prefix()."custome_form";
-		$sql1 ="CREATE TABLE `$table_name_short_code` (
-		`id` int(11) NOT NULL AUTO_INCREMENT,
-		`form_id` varchar(30) NOT NULL,
-		`string` varchar(1500) NOT NULL,
-		PRIMARY KEY (`id`),
-		UNIQUE KEY `form_id` (`form_id`)
-		) ENGINE=InnoDB DEFAULT CHARSET=latin1";
+		// $table_name_short_code = $this->db_prefix()."custome_form";
+		// $sql1 ="CREATE TABLE `$table_name_short_code` (
+		// `id` int(11) NOT NULL AUTO_INCREMENT,
+		// `form_id` varchar(30) NOT NULL,
+		// `string` varchar(1500) NOT NULL,
+		// PRIMARY KEY (`id`),
+		// UNIQUE KEY `form_id` (`form_id`)
+		// ) ENGINE=InnoDB DEFAULT CHARSET=latin1";
 
 		$shortcode_values = $this->db_prefix()."shortcode_values";
 		$sql2 ="CREATE TABLE `$shortcode_values` (
@@ -307,8 +309,8 @@ class DropboxUpload{
 		// ABSPATH is current project Directory dropbox-wordpress
 	public function edit_short_code(){
 		global $wpdb;
-		$table_name = $this->db_prefix().'custome_form';
-		$edit_short_code = $wpdb->get_results("SELECT * FROM $table_name WHERE id ='".$_POST['short_code_id']."'",ARRAY_A)[0];
+		$table_name = $this->db_prefix().'postmeta';
+		$edit_short_code = $wpdb->get_results("SELECT * FROM $table_name WHERE id ='".$_POST['post_id']."'",ARRAY_A)[0];
 		if(!empty($edit_short_code)){
 			include PLUGIN_DIR_PATH.'view/edit_short_code.php';
 			wp_die();
@@ -319,7 +321,7 @@ class DropboxUpload{
 	public function update_short_code_details(){
 		global $wpdb;
 		// echo $short_code_id;
-		$table_name = $this->db_prefix().'custome_form';
+		$table_name = $this->db_prefix().'postmeta';
 		$shot_code = json_decode(stripslashes($_POST['shot_code']));
 		$form_array = serialize($shot_code);
 		$short_code_id = $_POST['short_code_id'];
