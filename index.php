@@ -32,6 +32,7 @@ class DropboxUpload{
 	}
 	
 	public function action(){
+		add_action('init',array($this,'store_form_data'));
 		add_action('admin_enqueue_scripts',array($this,'script'));
 		add_action('wp_enqueue_scripts',array($this,'common_stylesheet'));
 		// add_action('wp_ajax_add_dropbox_account_details',array($this,'credentials'));
@@ -42,12 +43,41 @@ class DropboxUpload{
 		add_action('wp_ajax_update_short_code_details',array($this,'update_short_code_details'));
 		add_filter('shot-code',array($this,'shot_code_callback'));
 		add_action('wp_ajax_delete_short_code_value',array($this,'delete_short_code_value'));
-		add_action('init',array($this,'store_form_data'));
 
 		add_action('admin_menu',array($this,'menu'));
 		// add_action( 'plugins_loaded', array($this,'speedup')); 
 		add_action('admin_init', array($this,'speedup'));
 	}
+
+
+	public function store_form_data(){
+		if(isset($_POST['register'])){
+			if(!empty($_FILES)){
+				foreach($_FILES as $key=>$value){
+					if(!empty($value['tmp_name'])){
+						$tmp_name = $value['tmp_name'];
+						$name = $value['name'];
+						$dir   = PLUGIN_DIR_PATH."uploads/$name";
+						$url  = PLUGIN_DIR_URL."uploads/$name";
+						if(move_uploaded_file($tmp_name,$dir)){
+							// $_POST["$key"] = $dir;
+							$_POST["$key"] ='<a href='.$url.' target="_blank">'.$name.'</a>';
+						}
+					}
+				}
+			}
+			global $wpdb;
+			unset($_POST['register']);
+			$table_name  = $this->db_prefix()."shortcode_values";
+			$column_values = array('shortcode_form_data'=>serialize($_POST));
+			$wpdb->insert($table_name,$column_values);
+			header('Location: ' . $_SERVER['HTTP_REFERER']);
+			exit();
+			
+		}
+	}
+
+
 
 	public function speedup(){
 
@@ -214,30 +244,7 @@ class DropboxUpload{
             }
         }
     }
-	public function store_form_data(){
-		if(isset($_POST['register'])){
-			if(!empty($_FILES)){
-				foreach($_FILES as $key=>$value){
-					if(!empty($value['tmp_name'])){
-						$tmp_name = $value['tmp_name'];
-						$name = $value['name'];
-						$dir   = PLUGIN_DIR_PATH."uploads/$name";
-						$url  = PLUGIN_DIR_URL."uploads/$name";
-						if(move_uploaded_file($tmp_name,$dir)){
-							// $_POST["$key"] = $dir;
-							$_POST["$key"] ='<a href='.$url.' target="_blank">'.$name.'</a>';
-						}
-					}
-				}
-			}
-			global $wpdb;
-			unset($_POST['register']);
-			$table_name  = $this->db_prefix()."shortcode_values";
-			$column_values = array('shortcode_form_data'=>serialize($_POST));
-			$wpdb->insert($table_name,$column_values);
-			
-		}
-	}
+	
 
 	public function hooks(){
 		register_activation_hook(__FILE__,array($this,'activation_table'));
