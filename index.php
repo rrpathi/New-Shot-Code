@@ -1,14 +1,13 @@
+
 <?php 
 /*
 Plugin Name:  WP Form Plugin
 Plugin URI:   https://developer.wordpress.org/plugins/the-basics/
 Description:  Basic WordPress Plugin Header Comment
-Version:      2.0
+Version:      1.0
 Author:       WordPress.org
 Author URI:   https://developer.wordpress.org/
 */
-
-
 // include_once 'vendor/autoload.php';
 // use Kunnu\Dropbox\Dropbox;
 // use Kunnu\Dropbox\DropboxApp;
@@ -35,7 +34,6 @@ class DropboxUpload{
 		add_action('init',array($this,'store_form_data'));
 		add_action('admin_enqueue_scripts',array($this,'script'));
 		add_action('wp_enqueue_scripts',array($this,'common_stylesheet'));
-
 		// add_action('wp_ajax_add_dropbox_account_details',array($this,'credentials'));
 		// add_action('wp_ajax_my_ajax_function',array($this,'dropbox_sdk'));
 		add_action('wp_ajax_shot_code_register',array($this,'add_new_shotcode'));
@@ -44,7 +42,6 @@ class DropboxUpload{
 		add_action('wp_ajax_update_short_code_details',array($this,'update_short_code_details'));
 		add_filter('shot-code',array($this,'shot_code_callback'));
 		add_action('wp_ajax_delete_short_code_value',array($this,'delete_short_code_value'));
-
 		add_action('admin_menu',array($this,'menu'));
 		// add_action( 'plugins_loaded', array($this,'speedup')); 
 		add_action('admin_init', array($this,'speedup'));
@@ -55,8 +52,6 @@ class DropboxUpload{
 		add_action('admin_notices',array($this,'admin_notice_success'));
 		
 	}
-
-
 	public function store_form_data(){
 		if(isset($_POST['register'])){
 			if(!empty($_FILES)){
@@ -83,16 +78,13 @@ class DropboxUpload{
 			
 		}
 	}
-
-
-
 	public function speedup(){
-
 		add_filter('site_transient_update_plugins',array($this,'push_update'));
-
 	}
-
 	public function push_update($transient){
+		if(empty(get_option('plugin_activation_key')) || (get_option('plugin_verification_status') !='1')){
+			return $transient;
+		}
 		 $plugin_slug = basename(dirname(__FILE__)).'/'.basename(__FILE__);
 		 $localplugin_version =  $transient->checked[$plugin_slug];
 		// // Remote Url
@@ -114,7 +106,6 @@ class DropboxUpload{
 			return $transient;
 		}
 	}
-
 	public function delete_short_code(){
 		global $wpdb;
 		$table_post = $this->db_prefix().'posts';
@@ -161,9 +152,7 @@ class DropboxUpload{
 		add_submenu_page('create-form','Create Form','Add Shot Code','manage_options','create-form',array($this,'custome_form'));
 		add_submenu_page('create-form','List Short Code','List Short Code','manage_options','list-shot-code',array($this,'list_shot_code'));
 		add_submenu_page('create-form','Short Values','View Short Code Data','manage_options','view_short_code_value',array($this,'view_short_code_value'));
-
 		// add_submenu_page('create-form','File Upload','Dropbox Upload','manage_options','dropbox_view',array($this,'dropbox_view'));
-
 	}
 	public function custome_form(){
 		include PLUGIN_DIR_PATH.'view/custome_form.php';
@@ -171,7 +160,6 @@ class DropboxUpload{
 	public function list_shot_code(){
 		include PLUGIN_DIR_PATH.'view/list_shot_code.php';
 	}
-
 	public function dropbox_view(){
 		include PLUGIN_DIR_PATH.'view/upload.php';
 	}
@@ -185,7 +173,6 @@ class DropboxUpload{
 		wp_enqueue_script('edit-short-code',PLUGIN_DIR_URL.'js/shortcode_edit.js');
 		wp_enqueue_script('validation-js',PLUGIN_DIR_URL.'js/jquery.validate.js');
 	}
-
 	public  function common_stylesheet(){
 		wp_enqueue_style( 'custome_style.css',PLUGIN_DIR_URL.'css/custome_style.css');
 		
@@ -195,23 +182,19 @@ class DropboxUpload{
 		$this->wpdb = $wpdb;
 		return $this->wpdb->prefix;
 	}
-
 	// public function shot_code_callback($value){
 	// 	foreach ($value as $key => $stored_data) {
 	// 		$shortcode[$stored_data['form_id']] = json_decode(json_encode(unserialize($stored_data['string'])),true);
 	// 	}
 	// 	return $shortcode;
 	// }
-
 	public function view_short_code_value(){
 		include PLUGIN_DIR_PATH.'view/shot_code_values.php';
 	}
-
  	public function apply_filter(){
         global $wpdb;
         // $table_name  = $this->db_prefix()."custome_form";
          $value = $wpdb->get_results('SELECT postmeta.meta_value,posts.post_content  FROM '.$wpdb->prefix.'postmeta AS postmeta  INNER JOIN '. $wpdb->prefix.'posts AS posts ON postmeta.post_id =  posts.id WHERE posts.post_type ="wps_custom_post"',ARRAY_A);
-
         if(!empty($value)){
             // $apply_filter = apply_filters('shot-code',$value);
             foreach ($value as $key => $stored_data) {
@@ -254,13 +237,11 @@ class DropboxUpload{
         }
     }
 	
-
 	public function hooks(){
 		register_activation_hook(__FILE__,array($this,'activation_table'));
 		register_deactivation_hook( __FILE__,array($this,'deactivation_hook'));
 		// __FILE__  current file location (index.php)
 	}
-
 	public function deactivation_hook(){
 		$this->delete_options();
 		global $wpdb;
@@ -271,7 +252,6 @@ class DropboxUpload{
 		$wpdb->query("TRUNCATE TABLE $table_name_short_code ");
 		$wpdb->query("TRUNCATE TABLE $shortcode_values ");
 	}
-
 	public function activation_table(){
 		$this->add_options();
 		// $table_name  = $this->db_prefix()."dropbox_details";
@@ -283,7 +263,6 @@ class DropboxUpload{
 		// PRIMARY KEY (`id`)
 		// ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 		// ";
-
 		// $table_name_short_code = $this->db_prefix()."custome_form";
 		// $sql1 ="CREATE TABLE `$table_name_short_code` (
 		// `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -292,15 +271,12 @@ class DropboxUpload{
 		// PRIMARY KEY (`id`),
 		// UNIQUE KEY `form_id` (`form_id`)
 		// ) ENGINE=InnoDB DEFAULT CHARSET=latin1";
-
 		$shortcode_values = $this->db_prefix()."shortcode_values";
 		$sql2 ="CREATE TABLE `$shortcode_values` (
 		`id` int(11) NOT NULL AUTO_INCREMENT,
 		`shortcode_form_data` varchar(500) NOT NULL,
 		PRIMARY KEY (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1";
-
-
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 		dbDelta( $sql1 );
@@ -317,7 +293,6 @@ class DropboxUpload{
 		}
 		
 	}
-
 	public function update_short_code_details(){
 		global $wpdb;
 		// echo $short_code_id;
@@ -332,8 +307,6 @@ class DropboxUpload{
 		$shotcode = $wpdb->update($table_name,$column_values,$where);
 		 $my_post = array('ID'=> $short_code_id,'post_title'=>$post_title,'post_content' => $post_content);
   		wp_update_post( $my_post );
-
-
 		if($shotcode){
 			echo json_encode(array('status'=>'1'));
 			wp_die();
@@ -342,9 +315,6 @@ class DropboxUpload{
 			wp_die();
 		}
 	}
-
-
-
 	public function delete_short_code_value(){
 		global $wpdb;
 		$table_name = $this->db_prefix().'shortcode_values';
@@ -357,7 +327,6 @@ class DropboxUpload{
 			wp_die();
 		}
 	}
-
 		public function plugin_key_activate(){
 		if($_POST['status'] =='1'){
 			if(update_option('plugin_verification_status','1')){
@@ -368,17 +337,13 @@ class DropboxUpload{
 		}
 		wp_die();
 	}
-
 		public function admin_notice_success(){
 		if(!empty(get_option('plugin_activation_key')) && (get_option('plugin_verification_status') !='1')){
 			echo '<div class="updated" style="text-align: center; display:block !important; "><p style="color: green; font-size: 14px; font-weight: bold;">Plugin Activation Key : <span style="color:black;"> '.get_option("plugin_activation_key").'</span></p><button id="plugin_activation_key" class="button button-primary">Activate</button></div>';
 		}else{
 			echo '<div class="updated" style="text-align: center; display:block !important; "><p style="color: green; font-size: 14px; font-weight: bold;">Plugin Activated Successfully - '.get_option("plugin_activation_key").'</div>';
-
-
 		}
 	}
-
 	public function add_options(){
 		add_option('plugin_activation_key',sha1(uniqid()));
 		add_option('plugin_verification_status','0');
@@ -387,9 +352,6 @@ class DropboxUpload{
 		delete_option('plugin_activation_key');
 		delete_option('plugin_verification_status');
 	}
-
-
-
 	// public function update_short_code_details(){
 	// 		 global $wpdb;
 	// 	 $shot_code = json_decode(stripslashes($_POST['update_short_code_details']));
@@ -427,7 +389,6 @@ class DropboxUpload{
 	// 	}
 		
 	// }
-
 		// public function credentials(){
 	// 	unset($_POST['action']);
 	// 	global $wpdb;
@@ -452,7 +413,6 @@ class DropboxUpload{
 	// 	$option =$this->folder;
 	// 	return $this->recursiveScan($dir,$option); 
 	// }
-
 		// public function recursiveScan($dir,$option){
 	// 	global $wpdb;
 	// 	$table_name = $this->db_prefix().'dropbox_details';
