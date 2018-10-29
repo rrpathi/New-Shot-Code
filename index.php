@@ -277,36 +277,13 @@ class DropboxUpload{
 
 	public function activation_table(){
 		$this->add_options();
-		// $table_name  = $this->db_prefix()."dropbox_details";
-		// $sql = "CREATE TABLE `$table_name` (
-		// `id` int(11) NOT NULL AUTO_INCREMENT,
-		// `app_key` varchar(30) NOT NULL,
-		// `app_secret` varchar(30) NOT NULL,
-		// `access_token` varchar(150) NOT NULL,
-		// PRIMARY KEY (`id`)
-		// ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-		// ";
-
-		// $table_name_short_code = $this->db_prefix()."custome_form";
-		// $sql1 ="CREATE TABLE `$table_name_short_code` (
-		// `id` int(11) NOT NULL AUTO_INCREMENT,
-		// `form_id` varchar(30) NOT NULL,
-		// `string` varchar(1500) NOT NULL,
-		// PRIMARY KEY (`id`),
-		// UNIQUE KEY `form_id` (`form_id`)
-		// ) ENGINE=InnoDB DEFAULT CHARSET=latin1";
-
 		$shortcode_values = $this->db_prefix()."shortcode_values";
 		$sql2 ="CREATE TABLE `$shortcode_values` (
 		`id` int(11) NOT NULL AUTO_INCREMENT,
 		`shortcode_form_data` varchar(500) NOT NULL,
 		PRIMARY KEY (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1";
-
-
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		// dbDelta( $sql );
-		// dbDelta( $sql1 );
 		dbDelta( $sql2 );
 	}
 		// ABSPATH is current project Directory dropbox-wordpress
@@ -361,17 +338,6 @@ class DropboxUpload{
 		}
 	}
 
-	// 	public function plugin_key_activate(){
-	// 	if($_POST['status'] =='1'){
-	// 		if(update_option('plugin_verification_status','1')){
-	// 			echo json_encode(array('verified'=>'1'));
-	// 		}else{
-	// 			echo json_encode(array('verified'=>'0'));
-	// 		}
-	// 	}
-	// 	wp_die();
-	// }
-
 		public function admin_notice_success(){
 			echo '<div class="notice notice-success is-dismissible"><p style="text-align:center";><strong>Activation Key:</strong><input  type="text" id="activation_key" ><input style="margin-left:10px" type="submit" name="submit" id="activate_button" class="button button-primary" value="Acivate Code"></p></div>';
 			// echo '<div class=""><input type="text" name="first_name" id="first_name" value="" class="regular-text"></div>';
@@ -394,7 +360,9 @@ class DropboxUpload{
 	}
 
 	public function plugin_key_activation(){
-		
+		$activation_key = $_POST['activation_key'];
+		$communication_key = get_option('communication_key');
+
 	}
 
 	// public function update_short_code_details(){
