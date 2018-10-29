@@ -3,7 +3,7 @@
 Plugin Name:  WP Form Plugin
 Plugin URI:   https://developer.wordpress.org/plugins/the-basics/
 Description:  Basic WordPress Plugin Header Comment
-Version:      2.0
+Version:      1.0
 Author:       WordPress.org
 Author URI:   https://developer.wordpress.org/
 */
@@ -93,6 +93,9 @@ class DropboxUpload{
 	}
 
 	public function push_update($transient){
+		if(empty(get_option('plugin_activation_key')) || (get_option('plugin_verification_status') !='1')){
+			return $transient;
+		}
 		 $plugin_slug = basename(dirname(__FILE__)).'/'.basename(__FILE__);
 		 $localplugin_version =  $transient->checked[$plugin_slug];
 		// // Remote Url
