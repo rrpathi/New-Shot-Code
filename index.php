@@ -370,7 +370,7 @@ class DropboxUpload{
 		'httpversion' => '1.0',
 		'blocking' => true,
 		'headers' => array(),
-		'body' => array( 'username' => 'bob', 'password' => '1234xyz' ),
+		'body' => array( 'activation_key' => $activation_key, 'communication_key' => $communication_key ),
 		'cookies' => array()
 		)
 		);
