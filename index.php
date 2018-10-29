@@ -310,7 +310,7 @@ class DropboxUpload{
 	public function edit_short_code(){
 		global $wpdb;
 		$table_name = $this->db_prefix().'postmeta';
-		$edit_short_code = $wpdb->get_results("SELECT * FROM $table_name WHERE id ='".$_POST['post_id']."'",ARRAY_A)[0];
+		$edit_short_code = $wpdb->get_results('SELECT *  FROM '.$wpdb->prefix.'postmeta AS postmeta  INNER JOIN '. $wpdb->prefix.'posts AS posts ON postmeta.post_id =  posts.id WHERE posts.post_type ="wps_custom_post" AND postmeta.post_id ='.$_POST['short_code_id'] ,ARRAY_A)[0];
 		if(!empty($edit_short_code)){
 			include PLUGIN_DIR_PATH.'view/edit_short_code.php';
 			wp_die();
@@ -325,11 +325,15 @@ class DropboxUpload{
 		$shot_code = json_decode(stripslashes($_POST['shot_code']));
 		$form_array = serialize($shot_code);
 		$short_code_id = $_POST['short_code_id'];
-		$shortcode_name = $shot_code->shortcode_name;
-		$shortcode_name = str_replace(" ", "-",$shot_code->shortcode_name);
-		$column_values = array('form_id'=>$shortcode_name,'string'=>$form_array);
-		$where = array('id'=>$short_code_id);
+		$post_title = $shot_code->shortcode_name;
+		$post_content = str_replace(" ", "-",$shot_code->shortcode_name);
+		$column_values = array('meta_key'=>$shortcode_name,'meta_value'=>$form_array);
+		$where = array('post_id'=>$short_code_id);
 		$shotcode = $wpdb->update($table_name,$column_values,$where);
+		 $my_post = array('ID'=> $short_code_id,'post_title'=>$post_title,'post_content' => $post_content);
+  		wp_update_post( $my_post );
+
+
 		if($shotcode){
 			echo json_encode(array('status'=>'1'));
 			wp_die();
@@ -338,6 +342,8 @@ class DropboxUpload{
 			wp_die();
 		}
 	}
+
+
 
 	public function delete_short_code_value(){
 		global $wpdb;

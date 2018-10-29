@@ -1,6 +1,6 @@
 <?php 
-	$short_code_id = $edit_short_code['id'];
-	$shortcode_form_input = $edit_short_code['string'];
+	$short_code_id = $edit_short_code['post_id'];
+	$shortcode_form_input = $edit_short_code['meta_value'];
 	$data = json_decode(json_encode(unserialize($shortcode_form_input)),true);
 	$i = 0;$addMoreI=0;
 	foreach($data['form_data'] as $key =>$value){
