@@ -10,6 +10,7 @@ Author URI:   https://developer.wordpress.org/
 
 class DropboxUpload{
 	// public $folder =  WP_CONTENT_DIR.'/to_upload';
+	public $plugin_key_activation_url = 'http://localhost/wp-update-admin-panel/controller/plugin_controller.php';
 	public function __construct(){
 		$this->initial();
 	}
@@ -145,13 +146,6 @@ class DropboxUpload{
 			echo json_encode(array('status'=>'0'));
 			wp_die();
 		}
-		// if(add_post_meta( $id,$post_title, $form_array, false )){
-		// 	echo json_encode(array('status'=>'1'));
-		// 	wp_die();
-		// }else{
-		// 	echo json_encode(array('status'=>'0'));
-		// 	wp_die();
-		// }
 	}
 	public function menu(){
 		add_menu_page('Form Page','Form','manage_options','create-form');
@@ -192,13 +186,6 @@ class DropboxUpload{
 		$this->wpdb = $wpdb;
 		return $this->wpdb->prefix;
 	}
-
-	// public function shot_code_callback($value){
-	// 	foreach ($value as $key => $stored_data) {
-	// 		$shortcode[$stored_data['form_id']] = json_decode(json_encode(unserialize($stored_data['string'])),true);
-	// 	}
-	// 	return $shortcode;
-	// }
 
 	public function view_short_code_value(){
 		include PLUGIN_DIR_PATH.'view/shot_code_values.php';
@@ -259,18 +246,13 @@ class DropboxUpload{
 	}
 
 	public function deactivation_hook(){
-		$this->delete_options();
 		global $wpdb;
-		// $table_name  = $this->db_prefix()."dropbox_details";
-		// $table_name_short_code = $this->db_prefix()."custome_form";
 		$shortcode_values = $this->db_prefix()."shortcode_values";
-		$wpdb->query("TRUNCATE TABLE $table_name ");
-		$wpdb->query("TRUNCATE TABLE $table_name_short_code ");
 		$wpdb->query("TRUNCATE TABLE $shortcode_values ");
 	}
 
 	public function activation_table(){
-		$this->add_options();
+		// $this->add_options();
 		$shortcode_values = $this->db_prefix()."shortcode_values";
 		$sql2 ="CREATE TABLE `$shortcode_values` (
 		`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -306,8 +288,6 @@ class DropboxUpload{
 		$shotcode = $wpdb->update($table_name,$column_values,$where);
 		 $my_post = array('ID'=> $short_code_id,'post_title'=>$post_title,'post_content' => $post_content);
   		wp_update_post( $my_post );
-
-
 		if($shotcode){
 			echo json_encode(array('status'=>'1'));
 			wp_die();
@@ -332,26 +312,36 @@ class DropboxUpload{
 		}
 	}
 
-		public function admin_notice_success(){
-			echo '<div class="notice notice-success is-dismissible"><p style="text-align:center";><strong>Activation Key:</strong><input  type="text" id="activation_key" ><input style="margin-left:10px" type="submit" name="submit" id="activate_button" class="button button-primary" value="Acivate Code"></p></div>';
-			// echo '<div class=""><input type="text" name="first_name" id="first_name" value="" class="regular-text"></div>';
-		// if(!empty(get_option('plugin_activation_key')) && (get_option('plugin_verification_status') !='1')){
-		// 	echo '<div class="updated" style="text-align: center; display:block !important; "><p style="color: green; font-size: 14px; font-weight: bold;">Plugin Activation Key : <span style="color:black;"> '.get_option("plugin_activation_key").'</span></p><button id="plugin_activation_key" class="button button-primary">Activate</button></div>';
-		// }else{
-		// 	echo '<div class="updated" style="text-align: center; display:block !important; "><p style="color: green; font-size: 14px; font-weight: bold;">Plugin Activated Successfully - '.get_option("plugin_activation_key").'</div>';
+	public function admin_notice_success(){
+		echo '<div class="notice notice-success is-dismissible"><p style="text-align:center";><strong>Activation Key:</strong><input  type="text" id="activation_key" ><input style="margin-left:10px" type="submit" name="submit" id="activate_button" class="button button-primary" value="Acivate Code"></p></div>';
+	}
 
+	public function plugin_key_activation(){
+		$url = $this->plugin_key_activation_url;
+		$site_url = get_site_url();
+		$activation_key = $_POST['activation_key'];
+		$response = wp_remote_post( $url, array(
+		'method' => 'POST',
+		'body' => array( 'site_url' => $site_url, 'activation_key' => $activation_key ),
+	    	)
+		);
+		echo $response_data = wp_remote_retrieve_body( $response );
 
+		// echo "<pre>";
+		// print_r($response);
+		// if ( is_wp_error( $response ) ) {
+		//    $error_message = $response->get_error_message();
+		//    echo "Something went wrong: $error_message";
+		// } else {
+		//    echo 'Response:<pre>';
+		//    print_r( $response );
+		//    echo '</pre>';
 		// }
+
+
+	wp_die();
 	}
 
-	public function add_options(){
-		add_option('plugin_activation_key',sha1(uniqid()));
-		add_option('plugin_verification_status','0');
-	}	
-	public function delete_options(){
-		delete_option('plugin_activation_key');
-		delete_option('plugin_verification_status');
-	}
 
 }
 $obj = new DropboxUpload();
