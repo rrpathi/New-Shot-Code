@@ -106,21 +106,27 @@ class DropboxUpload{
 		 $plugin_slug = basename(dirname(__FILE__)).'/'.basename(__FILE__);
 		 $localplugin_version =  $transient->checked[$plugin_slug];
 		$url = $this->check_update_notification_url;
-		$server_data = wp_remote_get( $url);
-		$latest_plugin_version = json_decode($server_data['body']);
-		$server_plugin_version = $latest_plugin_version->version;
-		if($server_plugin_version >$localplugin_version){
-			$res = new stdClass();
-			// type casting
-			$res->slug = $latest_plugin_version->slug;
-			$res->new_version = $latest_plugin_version->version;
-			$res->plugin = $plugin_slug;
-			$res->package = $latest_plugin_version->download_url;
-			$transient->response[$plugin_slug] = $res;
-			return $transient;
-		}else{
-			return $transient;
+		$server_data = wp_remote_post( $url, array(
+		'method' => 'POST',
+		'body' => array('plugin_communication_key'=>get_option('plugin_communication_key')),
+	    	));
+		if(!empty($server_data['body'])){
+			$latest_plugin_version = json_decode($server_data['body']);
+			$server_plugin_version = $latest_plugin_version->version;
+			if($server_plugin_version >$localplugin_version){
+				$res = new stdClass();
+				// type casting
+				$res->slug = $latest_plugin_version->slug;
+				$res->new_version = $latest_plugin_version->version;
+				$res->plugin = $plugin_slug;
+				$res->package = $latest_plugin_version->download_url;
+				$transient->response[$plugin_slug] = $res;
+				return $transient;
+			}else{
+				return $transient;
+			}
 		}
+	
 	}
 
 	public function delete_short_code(){
