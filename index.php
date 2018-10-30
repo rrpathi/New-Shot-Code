@@ -11,6 +11,7 @@ Author URI:   https://developer.wordpress.org/
 class DropboxUpload{
 	// public $folder =  WP_CONTENT_DIR.'/to_upload';
 	public $plugin_key_activation_url = 'http://localhost/wp-update-admin-panel/controller/plugin_controller.php';
+	public $check_update_notification_url;
 	public function __construct(){
 		$this->initial();
 	}
@@ -45,6 +46,17 @@ class DropboxUpload{
 		add_action('admin_init', array($this,'speedup'));
 		add_action('load-plugins.php',array($this,'plugin_notification'));
 		add_action('wp_ajax_plugin_key_activation',array($this,'plugin_key_activation'));
+		add_action('wp_ajax_premium_key_verified',array($this,'premium_key_verified'));
+	}
+
+	public function premium_key_verified(){
+		if(!empty($_POST['verified']) && ($_POST['verified'] =='1') && (get_option('premium_key_verified') !='1')){
+			update_option('premium_key_verified','1');
+			echo json_encode(array('status'=>'1','message'=>'premium_key_verified Updated'));
+		}else{
+			echo json_encode(array('status'=>'0','message'=>'Verified Value Not Equal to 1 or Already Activated'));
+		}
+		wp_die();
 	}
 	public function plugin_notification(){
 		add_action('admin_notices',array($this,'admin_notice_success'));
@@ -252,7 +264,7 @@ class DropboxUpload{
 	}
 
 	public function activation_table(){
-		// $this->add_options();
+		$this->add_options();
 		$shortcode_values = $this->db_prefix()."shortcode_values";
 		$sql2 ="CREATE TABLE `$shortcode_values` (
 		`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -262,7 +274,10 @@ class DropboxUpload{
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql2 );
 	}
-		// ABSPATH is current project Directory dropbox-wordpress
+
+	public function add_options(){
+		add_option('premium_key_verified','0');
+	}
 	public function edit_short_code(){
 		global $wpdb;
 		$table_name = $this->db_prefix().'postmeta';
@@ -313,7 +328,10 @@ class DropboxUpload{
 	}
 
 	public function admin_notice_success(){
-		echo '<div class="notice notice-success is-dismissible"><p style="text-align:center";><strong>Activation Key:</strong><input  type="text" id="activation_key" ><input style="margin-left:10px" type="submit" name="submit" id="activate_button" class="button button-primary" value="Acivate Code"></p></div>';
+		if(empty(get_option('premium_key_verified')) || (get_option('premium_key_verified')=='0')){
+			echo '<div class="notice notice-success is-dismissible"><p style="text-align:center";><strong>Activation Key:</strong><input  type="text" id="activation_key" ><input style="margin-left:10px" type="submit" name="submit" id="activate_button" class="button button-primary" value="Acivate Code"></p></div>';
+		}
+		
 	}
 
 	public function plugin_key_activation(){
@@ -326,20 +344,7 @@ class DropboxUpload{
 	    	)
 		);
 		echo $response_data = wp_remote_retrieve_body( $response );
-
-		// echo "<pre>";
-		// print_r($response);
-		// if ( is_wp_error( $response ) ) {
-		//    $error_message = $response->get_error_message();
-		//    echo "Something went wrong: $error_message";
-		// } else {
-		//    echo 'Response:<pre>';
-		//    print_r( $response );
-		//    echo '</pre>';
-		// }
-
-
-	wp_die();
+		wp_die();
 	}
 
 

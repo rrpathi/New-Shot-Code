@@ -142,7 +142,7 @@ jQuery(document).ready(function(){
 		e.preventDefault();
 		var activation_key = jQuery("#activation_key").val();
 		if(activation_key ==''){
-			alert('Wordpress Key Empty');
+			alert('Please Enter Valid Key');
 			return false;
 		}
 		jQuery.ajax({
@@ -153,13 +153,29 @@ jQuery(document).ready(function(){
 				activation_key:activation_key,
 			},
 			success:function(data){
+				// console.log(data);
 				var data = jQuery.parseJSON(data);
 				switch(data['status']){
 					case '0':
 					alert('Wrong Key');
 					break;
 					case '1':
-					alert('Key Activated Successfully');
+						jQuery.ajax({
+							type:'post',
+							url	:ajaxurl,
+							data:{
+								action:"premium_key_verified",
+								verified:'1',
+							},
+							success:function(data){
+								var response = jQuery.parseJSON(data);
+								if(response['status'] =='1'){
+									location. reload(true);
+								}else{
+									location. reload(true);
+								}
+							}
+						});
 					break;
 					case '2':
 					alert('Some Thing Wrong');
