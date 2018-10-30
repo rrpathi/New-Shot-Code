@@ -114,6 +114,26 @@ jQuery(document).ready(function(){
         // console.log(output);
 	});
 
+	jQuery("#activate_button").click(function(e){
+		e.preventDefault();
+		var activation_key = jQuery("#activation_key").val();
+		if(activation_key ==''){
+			alert('Wordpress Key Empty');
+			return false;
+		}
+		jQuery.ajax({
+			type:'post',
+			url:ajaxurl,
+			data:{
+				action:"plugin_key_activation",
+				activation_key:activation_key,
+			},
+			success:function(data){
+				console.log(data);
+			}
+		});
+	});
+
 	
 
 	// jQuery("#add_more").click(function(e){
