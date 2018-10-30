@@ -8,12 +8,6 @@ Author:       WordPress.org
 Author URI:   https://developer.wordpress.org/
 */
 
-
-// include_once 'vendor/autoload.php';
-// use Kunnu\Dropbox\Dropbox;
-// use Kunnu\Dropbox\DropboxApp;
-// use Kunnu\Dropbox\DropboxFile;
-// use Kunnu\Dropbox\Exceptions\DropboxClientException;
 class DropboxUpload{
 	// public $folder =  WP_CONTENT_DIR.'/to_upload';
 	public function __construct(){
