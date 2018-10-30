@@ -361,19 +361,11 @@ class DropboxUpload{
 
 	public function plugin_key_activation(){
 		$activation_key = $_POST['activation_key'];
-		$communication_key = get_option('communication_key');
+		// $communication_key = get_option('communication_key');
 		$url = 'http://localhost/response_check.php';
 		$response = wp_remote_post( $url, array(
 		'method' => 'POST',
-		'timeout' => 45,
-		'redirection' => 5,
-		'httpversion' => '1.0',
-		'blocking' => true,
-		'headers' => array(),
-		'body' => array( 'activation_key' => $activation_key, 'communication_key' => $communication_key ),
-		'cookies' => array()
-		)
-		);
+		'body' => array( 'activation_key' => $activation_key)));
 
 		echo "<pre>";
 		print_r($response);
