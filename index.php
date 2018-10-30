@@ -330,7 +330,10 @@ class DropboxUpload{
 	public function admin_notice_success(){
 		if(empty(get_option('premium_key_verified')) || (get_option('premium_key_verified')=='0')){
 			echo '<div class="notice notice-success is-dismissible"><p style="text-align:center";><strong>Activation Key:</strong><input  type="text" id="activation_key" ><input style="margin-left:10px" type="submit" name="submit" id="activate_button" class="button button-primary" value="Acivate Code"></p></div>';
+		}else if(get_option('premium_key_verified')=='1'){
+			echo '<div class="notice notice-success is-dismissible"><p style="text-align:center;color: green; font-size: 14px; font-weight: bold;";><strong>Welcome.!</strong></p></div>';
 		}
+
 		
 	}
 
