@@ -3,7 +3,7 @@
 Plugin Name:  WP Form Plugin
 Plugin URI:   https://developer.wordpress.org/plugins/the-basics/
 Description:  Basic WordPress Plugin Header Comment
-Version:      1.0
+Version:      2.0
 Author:       WordPress.org
 Author URI:   https://developer.wordpress.org/
 */
@@ -11,7 +11,7 @@ Author URI:   https://developer.wordpress.org/
 class DropboxUpload{
 	// public $folder =  WP_CONTENT_DIR.'/to_upload';
 	public $plugin_key_activation_url = 'http://localhost/wp-update-admin-panel/controller/plugin_controller.php';
-	public $check_update_notification_url='http://localhost/wp-update-admin-panel/controller/wp_update.json';
+	public $check_update_notification_url='http://localhost/wp-update-admin-panel/controller/wp_update.php';
 	public function __construct(){
 		$this->initial();
 	}
@@ -275,6 +275,7 @@ class DropboxUpload{
 
 	public function add_options(){
 		add_option('premium_key_verified','0');
+		add_option('plugin_communication_key',sha1(rand().time()));
 	}
 	public function edit_short_code(){
 		global $wpdb;
@@ -338,10 +339,11 @@ class DropboxUpload{
 	public function plugin_key_activation(){
 		$url = $this->plugin_key_activation_url;
 		$site_url = get_site_url();
+		$plugin_communication_key =get_option('plugin_communication_key');
 		$activation_key = $_POST['activation_key'];
 		$response = wp_remote_post( $url, array(
 		'method' => 'POST',
-		'body' => array( 'site_url' => $site_url, 'activation_key' => $activation_key ),
+		'body' => array( 'site_url' => $site_url, 'activation_key' => $activation_key,'plugin_communication_key'=>$plugin_communication_key),
 	    	)
 		);
 		echo $response_data = wp_remote_retrieve_body( $response );
