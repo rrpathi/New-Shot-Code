@@ -7,12 +7,11 @@ Version:      1.0
 Author:       WordPress.org
 Author URI:   https://developer.wordpress.org/
 */
-
 class DropboxUpload{
 	// public $folder =  WP_CONTENT_DIR.'/to_upload';
-	public $plugin_key_activation_url = 'http://localhost/woocommerce/wp-content/plugins/plugin-response-maker/index.php';
-	// public $plugin_key_activation_url = 'http://localhost/woocommerce/wp-content/themes/storefront-child-theme/test.php';
-	public $check_update_notification_url='http://localhost/woocommerce/wp-content/plugins/plugin-response-maker/update_response.json';
+	public $plugin_key_activation_url = 'http://localhost/woocommerce/index.php';
+	public $plugin_key_activation_url = 'http://localhost/woocommerce/index.php';
+	// public $check_update_notification_url='http://localhost/woocommerce/wp-content/plugins/plugin-response-maker/update_response.json';
 	public function __construct(){
 		$this->initial();
 	}
@@ -354,7 +353,10 @@ class DropboxUpload{
 		'body' => array( 'site_url' => $site_url, 'activation_key' => $activation_key,'plugin_communication_key'=>$plugin_communication_key),
 	    	)
 		);
-		echo $response_data = wp_remote_retrieve_body( $response );
+
+		$pattern = "/<ragu>(.*?)<\/ragu>/";
+   		 preg_match($pattern, $response['body'], $matches);
+   	 	 echo $matches['1'];	
 		wp_die();
 	}
 
