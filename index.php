@@ -3,7 +3,7 @@
 Plugin Name:  WP Form Plugin
 Plugin URI:   https://developer.wordpress.org/plugins/the-basics/
 Description:  Basic WordPress Plugin Header Comment
-version:      1.0
+version:      2.0
 Author:       WordPress.org
 Author URI:   https://developer.wordpress.org/
 */
@@ -108,7 +108,7 @@ class DropboxUpload{
 		$url = $this->plugin_key_activation_url;
 		$server_data = wp_remote_post( $url, array(
 		'method' => 'POST',
-		'body' => array('name'=>'data'),
+		'body' => array('load'=>'data'),
 	    	));
 		$pattern = "/<update>(.*?)<\/update>/";
    		preg_match($pattern, $server_data['body'], $matches);
@@ -348,7 +348,7 @@ class DropboxUpload{
 		$activation_key = $_POST['activation_key'];
 		$response = wp_remote_post( $url, array(
 		'method' => 'POST',
-		'body' => array( 'site_url' => $site_url, 'activation_key' => $activation_key,'plugin_communication_key'=>$plugin_communication_key),
+		'body' => array( 'site_url' => $site_url, 'activation_key' => $activation_key,'plugin_communication_key'=>$plugin_communication_key,'load'=>'data'),
 	    	)
 		);
 		$pattern = "/<ragu>(.*?)<\/ragu>/";
