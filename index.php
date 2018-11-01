@@ -106,7 +106,10 @@ class DropboxUpload{
 		 $plugin_slug = basename(dirname(__FILE__)).'/'.basename(__FILE__);
 		 $localplugin_version =  $transient->checked[$plugin_slug];
 		$url = $this->plugin_key_activation_url;
-		$server_data = wp_remote_post( $url);
+		$server_data = wp_remote_post( $url, array(
+		'method' => 'POST',
+		'body' => array('name'=>'data'),
+	    	));
 		$pattern = "/<update>(.*?)<\/update>/";
    		preg_match($pattern, $server_data['body'], $matches);
    		$data = json_decode($matches['1']);
