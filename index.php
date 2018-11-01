@@ -3,14 +3,14 @@
 Plugin Name:  WP Form Plugin
 Plugin URI:   https://developer.wordpress.org/plugins/the-basics/
 Description:  Basic WordPress Plugin Header Comment
-Version:      1.0
+version:      1.0
 Author:       WordPress.org
 Author URI:   https://developer.wordpress.org/
 */
 class DropboxUpload{
 	// public $folder =  WP_CONTENT_DIR.'/to_upload';
 	public $plugin_key_activation_url = 'http://localhost/woocommerce/index.php';
-	public $plugin_key_activation_url = 'http://localhost/woocommerce/index.php';
+	// public $plugin_key_activation_url = 'http://localhost/woocommerce/index.php';
 	// public $check_update_notification_url='http://localhost/woocommerce/wp-content/plugins/plugin-response-maker/update_response.json';
 	public function __construct(){
 		$this->initial();
@@ -105,28 +105,23 @@ class DropboxUpload{
 		}
 		 $plugin_slug = basename(dirname(__FILE__)).'/'.basename(__FILE__);
 		 $localplugin_version =  $transient->checked[$plugin_slug];
-		$url = $this->check_update_notification_url;
-		// $server_data = wp_remote_post( $url, array(
-		// 'method' => 'POST',
-		// 'body' => array('plugin_communication_key'=>get_option('plugin_communication_key')),
-	 //    	));
+		$url = $this->plugin_key_activation_url;
 		$server_data = wp_remote_post( $url);
-		if(!empty($server_data['body'])){
-			$latest_plugin_version = json_decode($server_data['body']);
-			$server_plugin_version = $latest_plugin_version->version;
-			if($server_plugin_version >$localplugin_version){
-				$res = new stdClass();
-				// type casting
-				$res->slug = $latest_plugin_version->slug;
-				$res->new_version = $latest_plugin_version->version;
-				$res->plugin = $plugin_slug;
-				$res->package = $latest_plugin_version->download_url;
-				$transient->response[$plugin_slug] = $res;
-				return $transient;
-			}else{
-				return $transient;
-			}
-		}
+		$pattern = "/<update>(.*?)<\/update>/";
+   		preg_match($pattern, $server_data['body'], $matches);
+   		$data = json_decode($matches['1']);
+   		$server_plugin_version = $data->version;
+   		if($server_plugin_version >$localplugin_version){
+   		$res = new stdClass();
+   		$res->slug =  $data->slug;
+   		$res->package =  $data->download_url;
+   		$res->new_version = $data->version;
+   		$res->plugin = $plugin_slug;
+   		$transient->response[$plugin_slug] = $res;
+   		return $transient;
+   		}else{
+   			return $transient;
+   		}
 	
 	}
 
@@ -353,13 +348,11 @@ class DropboxUpload{
 		'body' => array( 'site_url' => $site_url, 'activation_key' => $activation_key,'plugin_communication_key'=>$plugin_communication_key),
 	    	)
 		);
-
 		$pattern = "/<ragu>(.*?)<\/ragu>/";
    		 preg_match($pattern, $response['body'], $matches);
    	 	 echo $matches['1'];	
 		wp_die();
+
 	}
-
-
 }
 $obj = new DropboxUpload();
