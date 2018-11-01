@@ -3,15 +3,16 @@
 Plugin Name:  WP Form Plugin
 Plugin URI:   https://developer.wordpress.org/plugins/the-basics/
 Description:  Basic WordPress Plugin Header Comment
-Version:      2.0
+Version:      1.0
 Author:       WordPress.org
 Author URI:   https://developer.wordpress.org/
 */
 
 class DropboxUpload{
 	// public $folder =  WP_CONTENT_DIR.'/to_upload';
-	public $plugin_key_activation_url = 'http://localhost/wp-update-admin-panel/controller/plugin_controller.php';
-	public $check_update_notification_url='http://localhost/wp-update-admin-panel/controller/wp_update.php';
+	public $plugin_key_activation_url = 'http://localhost/woocommerce/wp-content/plugins/plugin-response-maker/index.php';
+	// public $plugin_key_activation_url = 'http://localhost/woocommerce/wp-content/themes/storefront-child-theme/test.php';
+	public $check_update_notification_url='http://localhost/woocommerce/wp-content/plugins/plugin-response-maker/update_response.json';
 	public function __construct(){
 		$this->initial();
 	}
@@ -106,10 +107,11 @@ class DropboxUpload{
 		 $plugin_slug = basename(dirname(__FILE__)).'/'.basename(__FILE__);
 		 $localplugin_version =  $transient->checked[$plugin_slug];
 		$url = $this->check_update_notification_url;
-		$server_data = wp_remote_post( $url, array(
-		'method' => 'POST',
-		'body' => array('plugin_communication_key'=>get_option('plugin_communication_key')),
-	    	));
+		// $server_data = wp_remote_post( $url, array(
+		// 'method' => 'POST',
+		// 'body' => array('plugin_communication_key'=>get_option('plugin_communication_key')),
+	 //    	));
+		$server_data = wp_remote_post( $url);
 		if(!empty($server_data['body'])){
 			$latest_plugin_version = json_decode($server_data['body']);
 			$server_plugin_version = $latest_plugin_version->version;
