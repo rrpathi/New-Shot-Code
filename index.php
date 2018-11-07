@@ -108,7 +108,7 @@ class DropboxUpload{
 		$url = $this->plugin_key_activation_url;
 		$server_data = wp_remote_post( $url, array(
 		'method' => 'POST',
-		'body' => array('load'=>'data'),
+		'body' => array('load'=>'data','plugin_communication_key' =>get_option('plugin_communication_key')),
 	    	));
 		$pattern = "/<update>(.*?)<\/update>/";
    		preg_match($pattern, $server_data['body'], $matches);
