@@ -245,9 +245,11 @@ class DropboxUpload{
                     $result .="<br />"; 
                     }
                 }
+                ob_start();
                 echo "<form action='#' method='POST' id='form_data' enctype='multipart/form-data'>
                 $result.<br /><input type='submit' id='store_form_value' name='register'>
                 </form>";
+                return ob_get_clean();
                 });
             }
         }
