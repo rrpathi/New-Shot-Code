@@ -101,6 +101,7 @@ class DropboxUpload{
 
 	public function push_update($transient){
 		if(empty(get_option('premium_key_verified')) || (get_option('premium_key_verified') =='0')){
+			// add_filter( 'all_plugins',array($this,'list_plugin'));
 			return $transient;
 		}
 		 $plugin_slug = basename(dirname(__FILE__)).'/'.basename(__FILE__);
@@ -113,19 +114,33 @@ class DropboxUpload{
 		$pattern = "/<update>(.*?)<\/update>/";
    		preg_match($pattern, $server_data['body'], $matches);
    		$data = json_decode($matches['1']);
-   		$server_plugin_version = $data->version;
-   		if($server_plugin_version >$localplugin_version){
-   		$res = new stdClass();
-   		$res->slug =  $data->slug;
-   		$res->package =  $data->download_url;
-   		$res->new_version = $data->version;
-   		$res->plugin = $plugin_slug;
-   		$transient->response[$plugin_slug] = $res;
-   		return $transient;
+   		if($data->blocked =='0'){
+			add_filter( 'all_plugins',array($this,'block_notification'));
+
    		}else{
-   			return $transient;
+	   		$server_plugin_version = $data->version;
+	   		if($server_plugin_version >$localplugin_version){
+		   		$res = new stdClass();
+		   		$res->slug =  $data->slug;
+		   		$res->package =  $data->download_url;
+		   		$res->new_version = $data->version;
+		   		$res->plugin = $plugin_slug;
+		   		$transient->response[$plugin_slug] = $res;
+		   		return $transient;
+	   		}else{
+	   			return $transient;
+	   		}
    		}
+   		
 	
+	}
+
+	public function block_notification($plugins ){
+		 $plugin_file = basename(dirname(__FILE__)).'/'.basename(__FILE__);
+		 $plugins[$plugin_file]['Description'] = '<strong>*** NOTICE: Your Account Has Been Blocked ***</strong> ';
+	    return $plugins;
+
+
 	}
 
 	public function delete_short_code(){
